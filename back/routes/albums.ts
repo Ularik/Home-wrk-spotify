@@ -1,6 +1,5 @@
 import express from "express";
-import ArtistsOrm from "../models/Artists";
-import { Album, AlbumMutation } from "../types";
+import { AlbumMutation } from "../types";
 import { imagesUpload } from "../multer";
 import AlbumsOrm from "../models/Albums";
 
@@ -23,9 +22,28 @@ albumsRouter.post("/", imagesUpload.single("image"), async (req, res) => {
 });
 
 albumsRouter.get("/", async (req, res) => {
+  const { id } = req.query;
   try {
-    const albums: Album[] = await AlbumsOrm.find();
+    if (id) {
+      const filteredAlbums = await AlbumsOrm.find({artist: id});
+      res.send(filteredAlbums);
+    }
+    const albums = await AlbumsOrm.find();
     res.send(albums);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
+
+albumsRouter.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const filteredAlbums = await AlbumsOrm.find({ _id: id }).populate(
+      "artist",
+      "name",
+    );
+    res.send(filteredAlbums);
   } catch (err) {
     res.sendStatus(500);
   }
