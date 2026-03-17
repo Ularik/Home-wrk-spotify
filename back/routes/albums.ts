@@ -11,7 +11,7 @@ albumsRouter.post("/", imagesUpload.single("image"), async (req, res) => {
     image: req.file ? req.file.filename : null,
     artist: req.body.artist,
   };
-
+  
   try {
     const album = new AlbumsOrm(data);
     await album.save();
