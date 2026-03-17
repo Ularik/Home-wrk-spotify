@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Types } from "mongoose";
-import ArtistsOrm from "./artists";
+import ArtistsOrm from "./Artists";
 
 const AlbumsSchema = new mongoose.Schema({
     title: {

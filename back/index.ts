@@ -1,13 +1,16 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import artistsRouter from "./routes/artists";
+import albumsRouter from "./routes/albums";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 const port = 8001;
 
-// app.use('/products', productsRouter);
+app.use("/artists", artistsRouter);
+app.use("/albums", albumsRouter);
 
 const run = async () => {
   await mongoose.connect("mongodb://localhost/link_data");
