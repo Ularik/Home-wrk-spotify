@@ -4,12 +4,14 @@ import mongoose from "mongoose";
 import artistsRouter from "./routes/artists";
 import albumsRouter from "./routes/albums";
 import tracksRouter from "./routes/tracks";
+import usersRouter from "./routes/users";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 const port = 8001;
 
+app.use("/users", usersRouter);
 app.use("/artists", artistsRouter);
 app.use("/albums", albumsRouter);
 app.use("/tracks", tracksRouter);

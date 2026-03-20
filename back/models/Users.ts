@@ -1,5 +1,6 @@
 import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
+import { randomUUID } from "node:crypto";
 
 const SALT_WORK_FACTOR = 10;
 
@@ -11,6 +12,7 @@ interface UsersFields {
 
 interface UsersMethods {
   checkPassword(password: string): Promise<boolean>;
+  generateToken(): void;
 }
 
 type UsersModel = Model<UsersFields, {}, UsersMethods>
@@ -50,6 +52,10 @@ UsersSchema.set("toJSON", {
 UsersSchema.methods.checkPassword = function (password) {
   return bcrypt.compare(password, this.password);
 };
+
+UsersSchema.methods.generateToken = function () {
+  this.token = randomUUID();
+}
 
 const UsersOrm = mongoose.model<UsersFields, UsersModel>("Users", UsersSchema);
 export default UsersOrm;
