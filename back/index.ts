@@ -5,6 +5,7 @@ import artistsRouter from "./routes/artists";
 import albumsRouter from "./routes/albums";
 import tracksRouter from "./routes/tracks";
 import usersRouter from "./routes/users";
+import tracks_history_Router from "./routes/track_history";
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use("/users", usersRouter);
 app.use("/artists", artistsRouter);
 app.use("/albums", albumsRouter);
 app.use("/tracks", tracksRouter);
+app.use("/track_history", tracks_history_Router);
 
 const run = async () => {
   await mongoose.connect("mongodb://localhost/link_data");
