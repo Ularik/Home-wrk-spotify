@@ -26,15 +26,17 @@ export interface AlbumMutation {
   year_manufacture: Number;
 }
 
-export interface Track {
+export interface Treck {
   _id: string;
   title: string;
   album: Album;
+  number_in_album: Number;
   duration: string;
 }
 
-export interface TrackMutation {
+export interface TreckMutation {
   title: string;
   album: string;
+  number_in_album: Number;
   duration: string;
 }

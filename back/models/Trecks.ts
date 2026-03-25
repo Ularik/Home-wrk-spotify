@@ -3,7 +3,7 @@ import { Types } from "mongoose";
 import AlbumsOrm from "./Albums";
 
 
-const TracksSchema = new mongoose.Schema({
+const TrecksSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -18,19 +18,20 @@ const TracksSchema = new mongoose.Schema({
         const album = await AlbumsOrm.findById(value);
         if (album) return true;
         return false;
-    },
+      },
       message: "Category does not exist!",
     },
   },
-  album_number: {
+  number_in_album: {
     type: Number,
-    required: true
+    required: true,
   },
   duration: {
     type: String,
     required: true,
+    unique: true
   },
 });
 
-const TracksOrm = mongoose.model("Tracks", TracksSchema);
-export default TracksOrm;
+const TrecksOrm = mongoose.model("Trecks", TrecksSchema);
+export default TrecksOrm;

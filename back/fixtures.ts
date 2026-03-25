@@ -8,10 +8,10 @@ const run = async () => {
   const db = mongoose.connection;
 
   try {
-    await db.dropCollection("Artists");
-    await db.dropCollection("Albums");
-    // await db.dropCollection("Tracks");
-    // await db.dropCollection("TracksHistory");
+    await db.dropCollection("artists");
+    await db.dropCollection("albums");
+    // await db.dropCollection("Trecks");
+    // await db.dropCollection("trecks_history");
     // await db.dropCollection("Users");
   } catch (e) {
     console.log("Collections were not present, skipping drop...");
