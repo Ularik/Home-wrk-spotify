@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { Types } from "mongoose";
 import AlbumsOrm from "./Albums";
 
+
 const TracksSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -20,6 +21,10 @@ const TracksSchema = new mongoose.Schema({
     },
       message: "Category does not exist!",
     },
+  },
+  album_number: {
+    type: Number,
+    required: true
   },
   duration: {
     type: String,

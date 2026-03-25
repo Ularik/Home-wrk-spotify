@@ -9,7 +9,7 @@ const artistsRouter = express.Router();
 artistsRouter.post("/", imagesUpload.single("image"), async (req, res) => {
     const data: ArtistMutatiion = {
       name: req.body.name,
-      image: req.file ? req.file.filename : null,
+      image: req.file ? "images/" + req.file.filename : null,
       descrition: req.body.description,
     };
 

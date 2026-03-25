@@ -22,7 +22,11 @@ const AlbumsSchema = new mongoose.Schema({
             },
         }
     },
-    image: String
+    image: String,
+    year_manufacture: {
+        type: Number,
+        required: true
+    }
 });
 
 const AlbumsOrm = mongoose.model("Albums", AlbumsSchema);
