@@ -8,8 +8,9 @@ const albumsRouter = express.Router();
 albumsRouter.post("/", imagesUpload.single("image"), async (req, res) => {
   const data: AlbumMutation = {
     title: req.body.title,
-    image: req.file ? req.file.filename : null,
+    image: req.file ? "images/" + req.file.filename : null,
     artist: req.body.artist,
+    year_manufacture: req.body.year_manufacture,
   };
   
   try {

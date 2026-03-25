@@ -2,13 +2,13 @@ export interface Artist {
   _id: string;
   name: string;
   image: string | null;
-  descrition: string | null;
+  description: string | null;
 }
 
 export interface ArtistMutatiion {
   name: string;
   image: string | null;
-  descrition: string | null;
+  description: string | null;
 }
 
 export interface Album {
@@ -16,12 +16,14 @@ export interface Album {
   title: string;
   artist: Artist;
   image: string | null;
+  year_manufacture: Number;
 }
 
 export interface AlbumMutation {
   title: string;
   artist: string;
   image: string | null;
+  year_manufacture: Number;
 }
 
 export interface Track {

@@ -14,9 +14,7 @@ const AlbumsSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: async (value: Types.ObjectId) => {
-                console.log(value);
                 const artist = await ArtistsOrm.findById(value);
-                console.log(artist)
                 if (artist) return true;
                 return false;
             },
