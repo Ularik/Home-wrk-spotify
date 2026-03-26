@@ -55,12 +55,12 @@ const CardItem: React.FC<Props> = ({
           {title}
         </Typography>
         {year_manufacture && (
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h5" marginBlock={1} component="div">
             {year_manufacture}
           </Typography>
         )}
         {count && (
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h5" marginBlock={1} component="div">
             {count}
           </Typography>
         )}

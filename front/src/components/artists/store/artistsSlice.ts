@@ -15,7 +15,7 @@ const initialState: ArtistsState = {
   error: false
 };
 
-export const artistsrSlice = createSlice({
+export const artistsSlice = createSlice({
   name: "artists",
   initialState,
   reducers: {},
@@ -38,5 +38,5 @@ export const artistsrSlice = createSlice({
   }
 });
 
-const artistsReducer = artistsrSlice.reducer;
+const artistsReducer = artistsSlice.reducer;
 export default artistsReducer;

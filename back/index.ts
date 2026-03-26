@@ -10,6 +10,7 @@ import config from "./config";
 
 const app = express();
 app.use(express.json());
+app.use(express.static(config.publicPath));
 app.use(cors());
 const port = 8001;
 

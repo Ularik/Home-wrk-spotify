@@ -28,14 +28,14 @@ export interface Album {
   title: string;
   artist: string;
   image: string | null;
-  year_manufacture: Number;
+  year_manufacture: number;
 }
 
 export interface AlbumMutation {
   title: string;
   artist: string;
   image: string | null;
-  year_manufacture: Number;
+  year_manufacture: number;
 }
 
 export interface Treck {
