@@ -29,6 +29,7 @@ artistsRouter.get("/", async (req, res) => {
     const artist: Artist[] = await ArtistsOrm.find();
     res.send(artist);
   } catch (err) {
+    console.log(err);
     res.sendStatus(500);
   }
 });
