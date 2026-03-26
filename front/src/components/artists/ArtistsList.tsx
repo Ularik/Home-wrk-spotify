@@ -13,7 +13,7 @@ const ArtistsList: React.FC<Props> = ({ artistsList, isLoading }) => {
     <Box sx={{ display: "flex", gap: 3, padding: 5 }}>
       {isLoading && <Spinner />}
       {artistsList.map((artist) => (
-        <ArtistsItem artist={artist} />
+        <ArtistsItem key={artist._id} artist={artist} />
       ))}
     </Box>
   );

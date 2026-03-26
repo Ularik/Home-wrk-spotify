@@ -26,8 +26,22 @@ artistsRouter.post("/", imagesUpload.single("image"), async (req, res) => {
 artistsRouter.get("/", async (req, res) => {
 
   try {
-    const artist: Artist[] = await ArtistsOrm.find();
+    const artist = await ArtistsOrm.find();
     res.send(artist);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
+
+artistsRouter.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (id) {
+      const artist = await ArtistsOrm.findById(id);
+      res.send(artist);
+    }
+    res.sendStatus(400).send({error: 'Artist not found'});
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

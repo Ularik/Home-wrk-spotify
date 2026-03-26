@@ -24,10 +24,10 @@ trecksRouter.post("/", async (req, res) => {
 });
 
 trecksRouter.get("/", async (req, res) => {
-  const { albumId } = req.query;
+  const { id } = req.query;
   try {
-    if (albumId) {
-      res.send(await TrecksOrm.find({ album: albumId }));
+    if (id) {
+      res.send(await TrecksOrm.find({ album: id }));
     }
     const trecks = await TrecksOrm.find();
     res.send(trecks);
