@@ -16,7 +16,7 @@ const AlbumsItem: React.FC<Props> = ({ album }) => {
         title={album.title}
         image={album.image}
         year_manufacture={album.year_manufacture}
-        count={2}
+        count={album.trecksCount}
       />
     </Box>
   );

@@ -1,3 +1,6 @@
+import mongoose from "mongoose";
+
+
 export interface Artist {
   _id: string;
   name: string;
@@ -15,6 +18,15 @@ export interface Album {
   _id: string;
   title: string;
   artist: Artist;
+  image: string | null;
+  year_manufacture: Number;
+}
+
+export interface AlbumWithCountOfTrecks {
+  _id: mongoose.Types.ObjectId;
+  title: string;
+  artist: mongoose.Types.ObjectId;
+  trecksCount: number;
   image: string | null;
   year_manufacture: Number;
 }

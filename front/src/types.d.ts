@@ -27,6 +27,7 @@ export interface Album {
   _id: string;
   title: string;
   artist: string;
+  trecksCount: number;
   image: string | null;
   year_manufacture: number;
 }

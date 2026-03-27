@@ -1,7 +1,8 @@
 import express from "express";
-import { AlbumMutation } from "../types";
+import { AlbumMutation, AlbumWithCountOfTrecks } from "../types";
 import { imagesUpload } from "../multer";
 import AlbumsOrm from "../models/Albums";
+import TrecksOrm from "../models/Trecks";
 
 const albumsRouter = express.Router();
 
@@ -26,8 +27,18 @@ albumsRouter.get("/", async (req, res) => {
   const { id } = req.query;
   try {
     if (id) {
-      const filteredAlbums = await AlbumsOrm.find({artist: id});
-      res.send(filteredAlbums);
+      const filteredAlbums = await AlbumsOrm.find({ artist: id }).sort("year_manufacture");
+      const newAlbums: AlbumWithCountOfTrecks[] = [];
+      for (const album of filteredAlbums) {
+        const albumId = album._id;
+        const trecksCount = (await TrecksOrm.find({ album: albumId })).length;
+        newAlbums.push({
+          ...album.toObject(),
+          trecksCount: trecksCount,
+        } as AlbumWithCountOfTrecks);
+      }
+
+      res.send(newAlbums);
     }
     const albums = await AlbumsOrm.find();
     res.send(albums);
