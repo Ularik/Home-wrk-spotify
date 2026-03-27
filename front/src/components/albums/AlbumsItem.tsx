@@ -11,7 +11,7 @@ const AlbumsItem: React.FC<Props> = ({ album }) => {
   const navigate = useNavigate();
 
   return (
-    <Box onClick={() => navigate(`/trecks?artistId=${album.artist}&albumId=${album._id}`)}>
+    <Box onClick={() => navigate(`/trecks?albumId=${album._id}`)}>
       <CardItem
         title={album.title}
         image={album.image}

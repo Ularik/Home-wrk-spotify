@@ -31,6 +31,14 @@ export interface Album {
   year_manufacture: number;
 }
 
+export interface AlbumWithArtist {
+  _id: string;
+  title: string;
+  artist: Artist;
+  image: string | null;
+  year_manufacture: number;
+}
+
 export interface AlbumMutation {
   title: string;
   artist: string;
@@ -42,13 +50,13 @@ export interface Treck {
   _id: string;
   title: string;
   album: Album;
-  number_in_album: Number;
+  number_in_album: number;
   duration: string;
 }
 
 export interface TreckMutation {
   title: string;
   album: string;
-  number_in_album: Number;
+  number_in_album: number;
   duration: string;
 }

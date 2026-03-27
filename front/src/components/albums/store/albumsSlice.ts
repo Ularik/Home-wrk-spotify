@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { Album } from "../../../types";
-import { fetchAlbums } from "./albumsThunks";
+import type { Album, AlbumWithArtist } from "../../../types";
+import { fetchAlbums, fetchAlbumWithArtist } from "./albumsThunks";
 
 interface AlbumsState {
   albums: Album[];
+  albumWithArtist: AlbumWithArtist | null;
   isLoading: boolean;
   error: boolean;
 }
 
 const initialState: AlbumsState = {
   albums: [],
+  albumWithArtist: null,
   isLoading: false,
   error: false,
 };
@@ -28,6 +30,21 @@ export const albumsSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(fetchAlbums.rejected, (state) => {
+      state.isLoading = false;
+      state.error = true;
+    });
+    builder.addCase(fetchAlbumWithArtist.pending, (state) => {
+      state.isLoading = true;
+      state.error = false;
+    });
+    builder.addCase(
+      fetchAlbumWithArtist.fulfilled,
+      (state, { payload: album }) => {
+        state.albumWithArtist = album;
+        state.isLoading = false;
+      },
+    );
+    builder.addCase(fetchAlbumWithArtist.rejected, (state) => {
       state.isLoading = false;
       state.error = true;
     });

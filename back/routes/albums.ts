@@ -44,7 +44,8 @@ albumsRouter.get("/:id", async (req, res) => {
       "artist",
       "name",
     );
-    res.send(filteredAlbums);
+    if (filteredAlbums.length) res.send(filteredAlbums[0]);
+    res.send({});
   } catch (err) {
     res.sendStatus(500);
   }
