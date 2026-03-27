@@ -74,6 +74,19 @@ const run = async () => {
         duration: "3:35",
       },
       {
+        title: "Tides",
+        album: edSheeranAlbumEquals!._id,
+        number_in_album: 1,
+        duration: "3:15",
+      },
+      {
+        title: "Overpass Graffiti",
+        album: edSheeranAlbumEquals!._id,
+        number_in_album: 11,
+        duration: "3:56",
+      },
+
+      {
         title: "The A Team",
         album: edSheeranAlbumPlus!._id,
         number_in_album: 1,
@@ -92,6 +105,19 @@ const run = async () => {
         duration: "8:46",
       },
       {
+        title: "Small Bump",
+        album: edSheeranAlbumPlus!._id,
+        number_in_album: 4,
+        duration: "4:19",
+      },
+      {
+        title: "You Need Me, I Don't Need You",
+        album: edSheeranAlbumPlus!._id,
+        number_in_album: 11,
+        duration: "3:40",
+      },
+
+      {
         title: "Shape of You",
         album: edSheeranAlbumDivide!._id,
         number_in_album: 4,
@@ -108,6 +134,18 @@ const run = async () => {
         album: edSheeranAlbumDivide!._id,
         number_in_album: 2,
         duration: "4:21",
+      },
+      {
+        title: "Happier",
+        album: edSheeranAlbumDivide!._id,
+        number_in_album: 6,
+        duration: "3:27",
+      },
+      {
+        title: "New Man",
+        album: edSheeranAlbumDivide!._id,
+        number_in_album: 10,
+        duration: "3:09",
       },
     );
 
@@ -152,6 +190,18 @@ const run = async () => {
           number_in_album: 11,
           duration: "5:01",
         },
+        {
+          title: "Yes",
+          album: beyonceDangerous!._id,
+          number_in_album: 5,
+          duration: "4:10",
+        },
+        {
+          title: "Dangerously in Love 2",
+          album: beyonceDangerous!._id,
+          number_in_album: 10,
+          duration: "4:53",
+        },
 
         {
           title: "Pray You Catch Me",
@@ -171,6 +221,18 @@ const run = async () => {
           number_in_album: 12,
           duration: "3:26",
         },
+        {
+          title: "Hold Up",
+          album: beyonceLemonade!._id,
+          number_in_album: 2,
+          duration: "3:41",
+        },
+        {
+          title: "Freedom (feat. Kendrick Lamar)",
+          album: beyonceLemonade!._id,
+          number_in_album: 10,
+          duration: "4:49",
+        },
 
         {
           title: "Ameriican Requiem",
@@ -189,6 +251,18 @@ const run = async () => {
           album: beyonceCowboy!._id,
           number_in_album: 11,
           duration: "3:28",
+        },
+        {
+          title: "Bodyguard",
+          album: beyonceCowboy!._id,
+          number_in_album: 16,
+          duration: "4:00",
+        },
+        {
+          title: "Levii's Jeans (with Post Malone)",
+          album: beyonceCowboy!._id,
+          number_in_album: 18,
+          duration: "4:17",
         },
       );
 

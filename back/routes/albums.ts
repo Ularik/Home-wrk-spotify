@@ -27,7 +27,7 @@ albumsRouter.get("/", async (req, res) => {
   const { id } = req.query;
   try {
     if (id) {
-      const filteredAlbums = await AlbumsOrm.find({ artist: id }).sort("-year_manufacture");
+      const filteredAlbums = await AlbumsOrm.find({ artist: id }).sort({year_manufacture: -1});
       const newAlbums: AlbumWithCountOfTrecks[] = [];
       for (const album of filteredAlbums) {
         const albumId = album._id;
@@ -56,10 +56,10 @@ albumsRouter.get("/:id", async (req, res) => {
       "artist",
       "name",
     );
-    if (filteredAlbums.length) res.send(filteredAlbums[0]);
-    res.send({});
+    if (filteredAlbums.length) return res.send(filteredAlbums[0]);
+    return res.send({});
   } catch (err) {
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 

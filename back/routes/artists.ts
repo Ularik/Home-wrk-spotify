@@ -39,12 +39,12 @@ artistsRouter.get("/:id", async (req, res) => {
   try {
     if (id) {
       const artist = await ArtistsOrm.findById(id);
-      res.send(artist);
+      return res.send(artist);
     }
-    res.sendStatus(400).send({error: 'Artist not found'});
+    return res.sendStatus(400).send({error: 'Artist not found'});
   } catch (err) {
     console.log(err);
-    res.sendStatus(500);
+    return res.sendStatus(500);
   }
 });
 

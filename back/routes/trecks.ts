@@ -5,7 +5,6 @@ import { TreckMutation } from "../types";
 const trecksRouter = express.Router();
 
 trecksRouter.post("/", async (req, res) => {
-  // console.log(req.body);
   const data: TreckMutation = {
     title: req.body.title,
     album: req.body.album,
@@ -27,10 +26,11 @@ trecksRouter.get("/", async (req, res) => {
   const { id } = req.query;
   try {
     if (id) {
-      res.send(await TrecksOrm.find({ album: id }));
+      const trecks = await TrecksOrm.find({ album: id }).sort({number_in_album: 1});
+      return res.send(trecks);
     }
     const trecks = await TrecksOrm.find();
-    res.send(trecks);
+    return res.send(trecks);
   } catch (err) {
     res.sendStatus(500);
   }
