@@ -33,6 +33,17 @@ const UsersSchema = new mongoose.Schema<UsersFields, UsersModel, UsersMethods>({
   },
 });
 
+UsersSchema.path("username").validate({
+  validator: async function (this: any, value: string) {
+    // Если поле name не изменялось, пропускаем валидацию
+    if (!this.isModified("username")) return true;
+    const user = await UsersOrm.findOne({ username: value });
+    return !user;
+  },
+
+  message: "This user is already registered",
+});
+
 UsersSchema.pre("save", async function () {
     if (!this.isModified("password")) return; 
 
