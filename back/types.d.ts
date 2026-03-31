@@ -58,3 +58,10 @@ export interface TreckHistory {
   track_id: string,
   datetime: Date,
 }
+
+interface PopulatedTreck {
+  _id: string;
+  title: string;
+  duration: number;
+  album: string; 
+}

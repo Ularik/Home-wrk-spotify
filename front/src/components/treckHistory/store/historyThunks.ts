@@ -1,12 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosApi from "../../../axiosApi";
-import type { TreckHistory } from "../../../types";
+import type {
+  Artist,
+  TreckHistory,
+  TrecksHistoryResponse,
+} from "../../../types";
 
 
 export const playTreck = createAsyncThunk<TreckHistory, any>(
   "trecks/playTreck",
   async ({ treckId, userToken }) => {
-    console.log(treckId, userToken);
     const res = await axiosApi.post<TreckHistory>(
       "/trecks_history/",
       { treckId },
@@ -22,17 +25,19 @@ export const playTreck = createAsyncThunk<TreckHistory, any>(
 );
 
 
-export const fetchTrecksHistory = createAsyncThunk<TreckHistory[], string>(
+export const fetchTrecksHistory = createAsyncThunk<TrecksHistoryResponse, string>(
   "trecksHistory/fetchTrecksHistory",
   async (userToken) => {
-    const res = await axiosApi.get<TreckHistory[]>(`/trecks_history/`, {
-      headers: {
-        Authorization: userToken,
-        "Content-Type": "application/json",
+    const res = await axiosApi.get<TrecksHistoryResponse>(
+      `/trecks_history/`,
+      {
+        headers: {
+          Authorization: userToken,
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
     return res.data;
   },
 );
-
 

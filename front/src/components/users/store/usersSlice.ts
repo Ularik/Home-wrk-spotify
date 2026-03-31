@@ -47,7 +47,7 @@ export const usersSlice = createSlice({
 
     builder.addCase(login.fulfilled, (state, { payload: user }) => {
       state.loginLoading = false;
-      state.user = user;
+      state.user = user.user;
     });
 
     builder.addCase(login.rejected, (state, { payload: error }) => {

@@ -1,5 +1,6 @@
 import express from "express";
 import ArtistsOrm from "../models/Artists";
+import TrecksOrm from "../models/Trecks";
 import { Artist, ArtistMutatiion } from "../types";
 import { imagesUpload } from "../multer";
 
@@ -47,5 +48,6 @@ artistsRouter.get("/:id", async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
 
 export default artistsRouter;

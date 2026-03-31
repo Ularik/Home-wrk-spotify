@@ -42,6 +42,12 @@ export interface Artist {
   description: string | null;
 }
 
+
+export interface ArtistOnlyName {
+  _id: string;
+  name: string;
+}
+
 export interface ArtistMutatiion {
   name: string;
   image: string | null;
@@ -72,9 +78,7 @@ export interface Album {
 export interface AlbumWithArtist {
   _id: string;
   title: string;
-  artist: Artist;
-  image: string | null;
-  year_manufacture: number;
+  artist: ArtistOnlyName;
 }
 
 export interface AlbumMutation {
@@ -92,6 +96,13 @@ export interface Treck {
   duration: string;
 }
 
+export interface TreckLite {
+  _id: string;
+  title: string;
+  album: string;
+  duration: string;
+}
+
 export interface TreckMutation {
   title: string;
   album: string;
@@ -102,6 +113,11 @@ export interface TreckMutation {
 export interface TreckHistory {
   _id: string;
   user_id: string;
-  track_id: string;
-  datetime: Date;
+  treck_id: TreckLite;
+  datetime: string;
+}
+
+export interface TrecksHistoryResponse {
+  trecks_history: TreckHistory[];
+  albums: AlbumWithArtist[];
 }

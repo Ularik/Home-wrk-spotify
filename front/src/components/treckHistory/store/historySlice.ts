@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { TreckHistory } from "../../../types";
+import type { AlbumWithArtist, TreckHistory } from "../../../types";
 import { fetchTrecksHistory, playTreck } from "./historyThunks";
 
 interface TrecksHistoryState {
   history: TreckHistory[];
+  albums: AlbumWithArtist[];
   isLoading: boolean;
   error: boolean;
 }
 
 const initialState: TrecksHistoryState = {
   history: [],
+  albums: [],
   isLoading: false,
   error: false,
 };
@@ -25,8 +27,9 @@ export const trecksHistorySlice = createSlice({
     });
     builder.addCase(
       fetchTrecksHistory.fulfilled,
-      (state, { payload: history }) => {
-        state.history = history;
+      (state, { payload: data }) => {
+        state.history = data.trecks_history;
+        state.albums = data.albums
         state.isLoading = false;
       },
     );

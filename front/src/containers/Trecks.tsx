@@ -6,6 +6,7 @@ import { fetchAlbumWithArtist } from "../components/albums/store/albumsThunks";
 import { useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router";
 import type { AlbumWithArtist } from "../types";
+import { selectTrecksHistoryAlbums } from "../components/treckHistory/store/historySelectors";
 import { selectTrecks, selectIsTrecksError, selectIsTrecksLoading } from "../components/trecks/store/trecksSelectors";
 import TrecksList from "../components/trecks/TrecksList";
 

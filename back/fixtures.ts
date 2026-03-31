@@ -12,8 +12,8 @@ const run = async () => {
     await db.dropCollection("artists");
     await db.dropCollection("albums");
     await db.dropCollection("trecks");
-    // await db.dropCollection("trecks_history");
-    // await db.dropCollection("Users");
+    await db.dropCollection("trecks_history");
+    await db.dropCollection("users");
   } catch (e) {
     console.log("Collections were not present, skipping drop...");
   }

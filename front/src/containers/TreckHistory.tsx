@@ -1,7 +1,7 @@
 import List from '@mui/material/List';
 import TreckHistoryItem from '../components/treckHistory/TreckHistoryItem';
 import { fetchTrecksHistory } from '../components/treckHistory/store/historyThunks';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectTrecksHistory } from "../components/treckHistory/store/historySelectors";
 import { selectUser } from '../components/users/store/usersSelectors';
@@ -10,11 +10,14 @@ import { selectUser } from '../components/users/store/usersSelectors';
 const TreckHistory = () => {
   const dispatch = useAppDispatch();
   const history = useAppSelector(selectTrecksHistory);
-  console.log(history)
   const user = useAppSelector(selectUser);
 
+  const fetchData = useCallback(async () => {
+    if (user) await dispatch(fetchTrecksHistory(user.token));
+  }, [dispatch, fetchTrecksHistory])
+
   useEffect(() => {
-    if (user) dispatch(fetchTrecksHistory(user.token));
+    fetchData();
   }, [dispatch, fetchTrecksHistory])
 
     return (

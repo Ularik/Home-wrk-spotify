@@ -26,7 +26,6 @@ const Register = () => {
 
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
-  console.log(error);
   const navigate = useNavigate();
 
   const getFieldError = (fieldName: string) => {

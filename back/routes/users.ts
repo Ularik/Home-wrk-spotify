@@ -21,7 +21,7 @@ usersRouter.post("/", async (req, res, next) => {
     const user = new UsersOrm(data);
     user.generateToken();
     await user.save();
-    res.send(user);
+    return res.send({user, message: "Register new user"});
 
   } catch (err) {
     if (err instanceof Error.ValidationError) {
@@ -36,7 +36,7 @@ usersRouter.post("/sessions", async (req, res, next) => {
   const password = req.body.password;
 
   if (username.trim() === "" || password.trim() === "") {
-    res.sendStatus(400).send({ error: "empty username or password" });
+    res.status(400).send({ error: "empty username or password" });
     return;
   }
 
@@ -44,13 +44,13 @@ usersRouter.post("/sessions", async (req, res, next) => {
       const user = await UsersOrm.findOne({ username: username });
 
       if (!user) {
-        res.sendStatus(401).send({ error: "user does not exist" });
+        res.status(400).send({ error: "user does not exist" });
         return;
       }
 
       const isMatch = await user.checkPassword(password);
       if (!isMatch) {
-        res.sendStatus(401).send({ error: "password not valid" });
+        res.status(400).send({ error: "password not valid" });
         return;
       }
       
