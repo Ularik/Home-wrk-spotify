@@ -5,9 +5,11 @@ import { useEffect, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { selectTrecksHistory } from "../components/treckHistory/store/historySelectors";
 import { selectUser } from '../components/users/store/usersSelectors';
+import { useNavigate } from 'react-router';
 
 
 const TreckHistory = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const history = useAppSelector(selectTrecksHistory);
   const user = useAppSelector(selectUser);
@@ -17,6 +19,7 @@ const TreckHistory = () => {
   }, [dispatch, fetchTrecksHistory])
 
   useEffect(() => {
+    if (!user) navigate('/login');
     fetchData();
   }, [dispatch, fetchTrecksHistory])
 

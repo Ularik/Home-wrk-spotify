@@ -56,7 +56,7 @@ usersRouter.post("/sessions", async (req, res, next) => {
       
       user.generateToken();
       await user.save();
-      res.send(user);
+      res.send({ user, message: "Login user" });
     } catch (err) {
       if (err instanceof Error.ValidationError) {
         return res.status(400).send(err);
