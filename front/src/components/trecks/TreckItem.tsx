@@ -6,7 +6,7 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import Divider from "@mui/material/Divider";
 import type { Treck } from "../../types";
 import { Typography } from "@mui/material";
-import { playTreck } from "./store/trecksThunks";
+import { playTreck } from "../treckHistory/store/historyThunks";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { selectUser } from "../users/store/usersSelectors";
 

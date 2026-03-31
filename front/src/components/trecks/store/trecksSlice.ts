@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Treck } from "../../../types";
-import { fetchTrecks, playTreck } from "./trecksThunks";
+import { fetchTrecks } from "./trecksThunks";
 
 
 interface TrecksState {
@@ -29,18 +29,6 @@ export const trecksSlice = createSlice({
       state.isLoading = false;
     });
     builder.addCase(fetchTrecks.rejected, (state) => {
-      state.isLoading = false;
-      state.error = true;
-    });
-
-    builder.addCase(playTreck.pending, (state) => {
-      state.isLoading = true;
-      state.error = false;
-    });
-    builder.addCase(playTreck.fulfilled, (state) => {
-      state.isLoading = false;
-    });
-    builder.addCase(playTreck.rejected, (state) => {
       state.isLoading = false;
       state.error = true;
     });

@@ -3,6 +3,7 @@ import artistsReducer from "../components/artists/store/artistsSlice";
 import albumsReducer from "../components/albums/store/albumsSlice";
 import trecksReducer from "../components/trecks/store/trecksSlice";
 import { usersReducer } from "../components/users/store/usersSlice";
+import trecksHistoryReducer from "../components/treckHistory/store/historySlice";
 import storage from "redux-persist/es/storage";
 import {
   FLUSH,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   artists: artistsReducer,
   albums: albumsReducer,
   trecks: trecksReducer,
+  trecksHistory: trecksHistoryReducer,
 });
 
 export const store = configureStore({

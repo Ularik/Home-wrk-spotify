@@ -100,6 +100,7 @@ export interface TreckMutation {
 }
 
 export interface TreckHistory {
+  _id: string;
   user_id: string;
   track_id: string;
   datetime: Date;

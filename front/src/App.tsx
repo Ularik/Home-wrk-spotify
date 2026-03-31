@@ -6,6 +6,7 @@ import Header from "./components/Header/Header";
 import { Container } from "@mui/material";
 import Register from "./components/users/Register";
 import Login from "./components/users/Login";
+import TreckHistory from "./containers/TreckHistory";
 
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/albums" element={<Albums />} />
           <Route path="/trecks" element={<Trecks />} />
+          <Route path="/history" element={<TreckHistory />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Routes>

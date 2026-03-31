@@ -20,7 +20,7 @@ trecks_history_Router.get("/", async (req, res) => {
 
   try {
     const trecks_history = await TrecksHistoryOrm.find({ user_id: String(user._id)});
-    return res.send({trecks_history: trecks_history});
+    return res.send(trecks_history);
   } catch(err) {
     return res.sendStatus(400).send({error: err});
   }
