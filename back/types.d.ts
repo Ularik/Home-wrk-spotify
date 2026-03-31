@@ -52,3 +52,9 @@ export interface TreckMutation {
   number_in_album: Number;
   duration: string;
 }
+
+export interface TreckHistory {
+  user_id: string;
+  track_id: string,
+  datetime: Date,
+}

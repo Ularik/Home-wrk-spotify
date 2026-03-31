@@ -18,7 +18,7 @@ app.use("/users", usersRouter);
 app.use("/artists", artistsRouter);
 app.use("/albums", albumsRouter);
 app.use("/trecks", trecksRouter);
-app.use("/treck_history", trecks_history_Router);
+app.use("/trecks_history", trecks_history_Router);
 
 const run = async () => {
   await mongoose.connect(config.db);

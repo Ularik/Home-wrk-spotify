@@ -6,9 +6,8 @@ const TrecksHistorySchema = new mongoose.Schema({
   user_id: {
     type: String,
     required: true,
-    unique: true,
   },
-  track_id: {
+  treck_id: {
     type: String,
     required: true,
   },

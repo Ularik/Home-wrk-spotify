@@ -34,7 +34,7 @@ export const register = createAsyncThunk<
 );
 
 export const login = createAsyncThunk<
-  User,
+  AuthResponse,
   LoginMutation,
   { rejectValue: GlobalError }
 >(
@@ -47,7 +47,7 @@ export const login = createAsyncThunk<
         loginMutation,
       );
 
-      return response.data.user;
+      return response.data;
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 400) {
         return rejectWithValue(e.response.data as GlobalError);

@@ -53,7 +53,7 @@ usersRouter.post("/sessions", async (req, res, next) => {
         res.sendStatus(401).send({ error: "password not valid" });
         return;
       }
-
+      
       user.generateToken();
       await user.save();
       res.send(user);
