@@ -54,14 +54,14 @@ export interface TreckMutation {
 }
 
 export interface TreckHistory {
-  user_id: string;
-  track_id: string,
-  datetime: Date,
+  user_id: ObjectId;
+  treck_id: PopulatedTreck;
+  datetime: Date;
 }
 
 interface PopulatedTreck {
-  _id: string;
+  _id: ObjectId;
   title: string;
   duration: number;
-  album: string; 
+  album: string;
 }

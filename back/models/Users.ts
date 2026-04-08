@@ -1,12 +1,14 @@
 import mongoose, { Model } from "mongoose";
-import bcrypt from "bcrypt";
-import { randomUUID } from "node:crypto";
+import argon2 from "argon2";
+import jwt from "jsonwebtoken";
+import config from "../config";
 
-const SALT_WORK_FACTOR = 10;
 
-interface UsersFields {
+export interface UsersFields {
+    id: string;
     username: string;
     password: string;
+    role: string;
     token: string
 }
 
@@ -26,6 +28,12 @@ const UsersSchema = new mongoose.Schema<UsersFields, UsersModel, UsersMethods>({
   password: {
     type: String,
     required: true,
+  },
+  role: {
+    type: String,
+    required: true,
+    default: "user",
+    enum: ["user", "admin"],
   },
   token: {
     type: String,
@@ -47,26 +55,29 @@ UsersSchema.path("username").validate({
 UsersSchema.pre("save", async function () {
     if (!this.isModified("password")) return; 
 
-    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
-    const hash = await bcrypt.hash(this.password, salt);
-    this.password = hash;
+    try {
+      this.password = await argon2.hash(this.password);
+    } catch (e) {
+      throw new Error("Error hash password");
+    }
 });
 
 UsersSchema.set("toJSON", {
   transform: (doc, ret, options) => {
     const { password, ...rets } = ret;
-
     return rets;
   },
 });
 
 UsersSchema.methods.checkPassword = function (password) {
-  return bcrypt.compare(password, this.password);
+  return argon2.verify(this.password, password);
 };
 
 UsersSchema.methods.generateToken = function () {
-  this.token = randomUUID();
-}
+  this.token = jwt.sign({ _id: this._id }, config.jwtSecret, {
+    expiresIn: "7d",
+  });
+};
 
 const UsersOrm = mongoose.model<UsersFields, UsersModel>("Users", UsersSchema);
 export default UsersOrm;

@@ -29,7 +29,12 @@ const TrecksSchema = new mongoose.Schema({
   duration: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+  },
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false,
   },
 });
 

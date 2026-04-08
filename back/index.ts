@@ -7,7 +7,10 @@ import trecksRouter from "./routes/trecks";
 import usersRouter from "./routes/users";
 import trecks_history_Router from "./routes/treck_history";
 import config from "./config";
+import dotenv from "dotenv";
 
+
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(express.static(config.publicPath));

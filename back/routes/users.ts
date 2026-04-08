@@ -31,6 +31,9 @@ usersRouter.post("/", async (req, res, next) => {
   }
 });
 
+
+
+
 usersRouter.post("/sessions", async (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;

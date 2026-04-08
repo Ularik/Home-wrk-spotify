@@ -23,7 +23,9 @@ trecks_history_Router.get("/", async (req, res) => {
   try {
     const trecks_history = await TrecksHistoryOrm.find({
       user_id: new Types.ObjectId(user._id),
-    }).sort({'datetime': -1}).populate("treck_id", "title duration album");
+    })
+      .sort({ datetime: -1 })
+      .populate("treck_id", "title duration album");
 
     const albums_ids = trecks_history.map(history => {
       const treck = history.treck_id as unknown as PopulatedTreck;

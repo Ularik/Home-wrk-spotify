@@ -3,6 +3,7 @@ import config from "./config";
 import ArtistsOrm from "./models/Artists";
 import AlbumsOrm from "./models/Albums";
 import TrecksOrm from "./models/Trecks";
+import UsersOrm from "./models/Users";
 
 const run = async () => {
   await mongoose.connect(config.db);
@@ -17,6 +18,25 @@ const run = async () => {
   } catch (e) {
     console.log("Collections were not present, skipping drop...");
   }
+
+  const admin = await UsersOrm.create({
+    username: 'admin',
+    password: 'admin',
+    token: '321',
+    role: 'admin'
+  });
+  admin.generateToken();
+  await admin.save();
+
+  const user = await UsersOrm.create({
+    username: "user",
+    password: "user",
+    token: "123",
+    role: "user",
+  });
+  user.generateToken();
+  await user.save();
+
 
   const [edSheeranArtist, beyonceArtist] = await ArtistsOrm.create(
     {
