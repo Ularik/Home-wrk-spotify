@@ -1,19 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { Album, AlbumWithArtist } from "../../../types";
-import { fetchAlbums, fetchAlbumWithArtist } from "./albumsThunks";
+import type { Album, AlbumWithArtist, ValidationError } from "../../../types";
+import { fetchAlbums, fetchAlbumWithArtist, createAlbum } from "./albumsThunks";
 
 interface AlbumsState {
   albums: Album[];
   albumWithArtist: AlbumWithArtist | null;
-  isLoading: boolean;
-  error: boolean;
+  fetchLoading: boolean;
+  fetchError: boolean;
+  createLoading: boolean;
+  createError: ValidationError | null
 }
 
 const initialState: AlbumsState = {
   albums: [],
   albumWithArtist: null,
-  isLoading: false,
-  error: false,
+  fetchLoading: false,
+  fetchError: false,
+  createLoading: false,
+  createError: null
 };
 
 export const albumsSlice = createSlice({
@@ -22,31 +26,43 @@ export const albumsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchAlbums.pending, (state) => {
-      state.isLoading = true;
-      state.error = false;
+      state.fetchLoading = true;
+      state.fetchLoading = false;
     });
     builder.addCase(fetchAlbums.fulfilled, (state, { payload: artists }) => {
       state.albums = artists;
-      state.isLoading = false;
+      state.fetchLoading = false;
     });
     builder.addCase(fetchAlbums.rejected, (state) => {
-      state.isLoading = false;
-      state.error = true;
+      state.fetchLoading = false;
+      state.fetchError = true;
     });
     builder.addCase(fetchAlbumWithArtist.pending, (state) => {
-      state.isLoading = true;
-      state.error = false;
+      state.fetchLoading = true;
+      state.fetchError = false;
     });
     builder.addCase(
       fetchAlbumWithArtist.fulfilled,
       (state, { payload: album }) => {
         state.albumWithArtist = album;
-        state.isLoading = false;
+        state.fetchLoading = false;
       },
     );
     builder.addCase(fetchAlbumWithArtist.rejected, (state) => {
-      state.isLoading = false;
-      state.error = true;
+      state.fetchLoading = false;
+      state.fetchError = true;
+    });
+
+    builder.addCase(createAlbum.pending, (state) => {
+      state.createLoading = true;
+      state.fetchError = false;
+    });
+    builder.addCase(createAlbum.fulfilled, (state) => {
+      state.createLoading = false;
+    });
+    builder.addCase(createAlbum.rejected, (state, {payload: error}) => {
+      state.createLoading = false;
+      state.createError = error || null;
     });
   },
 });

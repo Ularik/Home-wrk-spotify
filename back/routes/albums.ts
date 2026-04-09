@@ -5,11 +5,12 @@ import AlbumsOrm from "../models/Albums";
 import TrecksOrm from "../models/Trecks";
 import auth from "../middlewares/auth";
 import permit from "../middlewares/peermit";
+import { Error } from "mongoose";
 
 
 const albumsRouter = express.Router();
 
-albumsRouter.post("/", auth, imagesUpload.single("image"), async (req, res) => {
+albumsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, next) => {
   const data: AlbumMutation = {
     title: req.body.title,
     image: req.file ? "images/" + req.file.filename : null,
@@ -22,7 +23,10 @@ albumsRouter.post("/", auth, imagesUpload.single("image"), async (req, res) => {
     await album.save();
     res.send(album);
   } catch (err) {
-    res.sendStatus(500);
+    if (err instanceof Error.ValidationError) {
+      return res.status(400).send(err);
+    }
+    return next(err);
   }
 });
 
@@ -59,7 +63,7 @@ albumsRouter.get("/:id", async (req, res) => {
     if (album) return res.send(album);
     return res.send({});
   } catch (err) {
-    return res.sendStatus(500);
+    return res.status(500).send({error: 'Server error'});
   }
 });
 

@@ -73,7 +73,7 @@ UsersSchema.methods.checkPassword = function (password) {
   return argon2.verify(this.password, password);
 };
 
-UsersSchema.methods.generateToken = function () {
+UsersSchema.methods.generateToken = async function () {
   this.token = jwt.sign({ _id: this._id }, config.jwtSecret, {
     expiresIn: "7d",
   });

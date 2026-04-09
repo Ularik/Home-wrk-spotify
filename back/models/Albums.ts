@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Types } from "mongoose";
 import ArtistsOrm from "./Artists";
+import UsersOrm from "./Users";
 
 const AlbumsSchema = new mongoose.Schema({
   title: {
@@ -18,6 +19,18 @@ const AlbumsSchema = new mongoose.Schema({
         if (artist) return true;
         return false;
       },
+    },
+  },
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: UsersOrm,
+    validate: {
+      validator: async (value: Types.ObjectId) => {
+        const user = await UsersOrm.findById(value);
+        if (user) return true;
+        return false;
+      },
+      message: "user does not exist!",
     },
   },
   image: String,

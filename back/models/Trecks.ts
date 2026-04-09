@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Types } from "mongoose";
 import AlbumsOrm from "./Albums";
-
+import UsersOrm from "./Users";
 
 const TrecksSchema = new mongoose.Schema({
   title: {
@@ -20,6 +20,18 @@ const TrecksSchema = new mongoose.Schema({
         return false;
       },
       message: "Category does not exist!",
+    },
+  },
+  user: {
+    type: mongoose.Types.ObjectId,
+    ref: UsersOrm,
+    validate: {
+      validator: async (value: Types.ObjectId) => {
+        const user = await UsersOrm.findById(value);
+        if (user) return true;
+        return false;
+      },
+      message: "user does not exist!",
     },
   },
   number_in_album: {

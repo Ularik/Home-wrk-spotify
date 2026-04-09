@@ -2,7 +2,7 @@ import express from "express";
 import ArtistsOrm from "../models/Artists";
 import auth from "../middlewares/auth";
 import permit from "../middlewares/peermit";
-import { Artist, ArtistMutatiion } from "../types";
+import { ArtistMutatiion } from "../types";
 import { imagesUpload } from "../middlewares/multer";
 import { Error } from "mongoose";
 
@@ -32,7 +32,7 @@ artistsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, nex
 artistsRouter.get("/", async (req, res) => {
 
   try {
-    const artist = await ArtistsOrm.find();
+    const artist = await ArtistsOrm.find({isPublished: true});
     res.send(artist);
   } catch (err) {
     console.log(err);

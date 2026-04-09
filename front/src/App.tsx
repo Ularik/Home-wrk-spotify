@@ -8,6 +8,8 @@ import Register from "./components/users/Register";
 import Login from "./components/users/Login";
 import TreckHistory from "./containers/TreckHistory";
 import ArtistForm from "./components/artists/ArtistForm";
+import AlbumsForm from "./components/albums/AlbumsForm";
+import TrecksForm from "./components/trecks/TrecksForm";
 
 
 const App = () => {
@@ -22,6 +24,8 @@ const App = () => {
           <Route path="/trecks" element={<Trecks />} />
           <Route path="/history" element={<TreckHistory />} />
           <Route path="/add-artist" element={<ArtistForm />} />
+          <Route path="/add-album" element={<AlbumsForm />} />
+          <Route path="/add-treck" element={<TrecksForm />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Routes>

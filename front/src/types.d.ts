@@ -85,7 +85,7 @@ export interface AlbumMutation {
   title: string;
   artist: string;
   image: File | null;
-  year_manufacture: number;
+  year_manufacture: string;
 }
 
 export interface Treck {
@@ -106,7 +106,7 @@ export interface TreckLite {
 export interface TreckMutation {
   title: string;
   album: string;
-  number_in_album: number;
+  number_in_album: string;
   duration: string;
 }
 

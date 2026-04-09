@@ -36,10 +36,10 @@ const UserMenu: React.FC<Props> = ({ user }) => {
       >
         Add Artist
       </Button>
-      <Button variant="text" component={NavLink} to="/" color="inherit">
+      <Button variant="text" component={NavLink} to="add-album" color="inherit">
         Add Album
       </Button>
-      <Button variant="text" component={NavLink} to="/" color="inherit">
+      <Button variant="text" component={NavLink} to="/add-treck" color="inherit">
         Add Treck
       </Button>
       <Button onClick={handleClick} color="inherit">

@@ -1,5 +1,5 @@
-import { Alert, Box, Button, Grid, TextField, Typography } from "@mui/material";
-import { useState, type FormEvent } from "react";
+import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import type { ArtistMutatiion } from "../../types";
 import FileInput from "../UI/FileInput/FileInput";
 import { createArtist } from "./store/artistsThunks";

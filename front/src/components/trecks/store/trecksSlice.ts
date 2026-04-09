@@ -1,18 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { Treck } from "../../../types";
-import { fetchTrecks } from "./trecksThunks";
+import type { Treck, ValidationError } from "../../../types";
+import { fetchTrecks, createTrecks } from "./trecksThunks";
 
 
 interface TrecksState {
   trecks: Treck[];
-  isLoading: boolean;
-  error: boolean;
+  fetchLoading: boolean;
+  fetchError: boolean;
+  createLoading: boolean;
+  createError: ValidationError | null
 }
 
 const initialState: TrecksState = {
   trecks: [],
-  isLoading: false,
-  error: false,
+  fetchLoading: false,
+  fetchError: false,
+  createLoading: false,
+  createError: null
 };
 
 export const trecksSlice = createSlice({
@@ -21,16 +25,28 @@ export const trecksSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchTrecks.pending, (state) => {
-      state.isLoading = true;
-      state.error = false;
+      state.fetchLoading = true;
+      state.fetchError = false;
     });
     builder.addCase(fetchTrecks.fulfilled, (state, { payload: trecks }) => {
       state.trecks = trecks;
-      state.isLoading = false;
+      state.fetchLoading = false;
     });
     builder.addCase(fetchTrecks.rejected, (state) => {
-      state.isLoading = false;
-      state.error = true;
+      state.fetchLoading = false;
+      state.fetchError = true;
+    });
+
+    builder.addCase(createTrecks.pending, (state) => {
+      state.createLoading = true;
+      state.createError = null;
+    });
+    builder.addCase(createTrecks.fulfilled, (state) => {
+      state.createLoading = false;
+    });
+    builder.addCase(createTrecks.rejected, (state, { payload: error }) => {
+      state.createLoading = false;
+      state.createError = error || null;
     });
   },
 });

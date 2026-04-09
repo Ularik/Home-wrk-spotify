@@ -32,7 +32,6 @@ usersRouter.post("/", async (req, res, next) => {
 });
 
 
-
 usersRouter.post("/sessions", async (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
@@ -56,7 +55,7 @@ usersRouter.post("/sessions", async (req, res, next) => {
         return;
       }
       
-      user.generateToken();
+      await user.generateToken();
       await user.save();
       res.send({ user, message: "Login user" });
     } catch (err) {
