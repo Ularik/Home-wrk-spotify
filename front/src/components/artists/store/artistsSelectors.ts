@@ -8,3 +8,8 @@ export const selectCreateLoading = (state: RootState) =>
   state.artists.createLoading;
 export const selectCreateError = (state: RootState) =>
   state.artists.createError;
+
+export const selectPublicateLoading = (state: RootState) =>
+  state.artists.publicateLoading;
+export const selectPublicateError = (state: RootState) =>
+  state.artists.publicateError;

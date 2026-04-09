@@ -70,7 +70,7 @@ albumsRouter.get("/:id", async (req, res) => {
 });
 
 
-albumsRouter.get("/:id/togglePublished", auth, permit('admin'), async (req, res) => {
+albumsRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, res) => {
   const { id } = req.params;
   try {
     const album = await AlbumsOrm.findById(id);

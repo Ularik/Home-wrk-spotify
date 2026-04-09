@@ -1,19 +1,30 @@
 import type { Artist } from "../../types";
 import CardItem from "../UI/CardItem";
-import { Button } from "@mui/material";
 import { useNavigate } from "react-router";
 
 interface Props {
-    artist: Artist
+  artist: Artist;
+  publicateAlbumFunc: (id: string) => void;
 }
 
-const ArtistsItem: React.FC<Props> = ({ artist }) => {
+const ArtistsItem: React.FC<Props> = ({ artist, publicateAlbumFunc }) => {
   const navigate = useNavigate();
 
+  const navGate = () => {
+    navigate(`/albums?artistId=${artist._id}`);
+  };
+
   return (
-    <Button onClick={() => navigate(`/albums?artistId=${artist._id}`)}>
-      <CardItem title={artist.name} isPublished={artist.isPublished} image={artist.image} />
-    </Button>
+    <>
+      <CardItem
+        id={artist._id}
+        title={artist.name}
+        publicateFunc={publicateAlbumFunc}
+        navGate={navGate}
+        isPublished={artist.isPublished}
+        image={artist.image}
+      />
+    </>
   );
 };
 

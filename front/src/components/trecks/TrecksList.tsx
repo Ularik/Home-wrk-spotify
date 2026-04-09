@@ -3,18 +3,18 @@ import List from "@mui/material/List";
 import {
   selectDeleteTreckError,
   selectDeleteTreckLoading,
+  selectTrecks,
+  selectIsTrecksLoading,
+  selectIsTrecksError,
+  selectPublicateTreckError,
+  selectPublicateTreckLoading
 } from "./store/trecksSelectors";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Alert } from "@mui/material";
 import { deleteTrecks, fetchTrecks, publicateTreck } from "./store/trecksThunks";
-import { useNavigate, useSearchParams } from "react-router";
+import { useSearchParams } from "react-router";
 import Spinner from "../UI/Spinner";
 import { useEffect, useCallback } from "react";
-import {
-  selectTrecks,
-  selectIsTrecksLoading,
-  selectIsTrecksError,
-} from "./store/trecksSelectors";
 import { fetchAlbumWithArtist } from "../albums/store/albumsThunks";
 
 
@@ -22,7 +22,6 @@ import { fetchAlbumWithArtist } from "../albums/store/albumsThunks";
 const TrecksList = () => {
   const searchParams = useSearchParams();
   const albumId = searchParams[0].get("albumId");
-  const navigate = useNavigate();
     const trecks = useAppSelector(selectTrecks);
     const isLoading = useAppSelector(selectIsTrecksLoading);
     const isError = useAppSelector(selectIsTrecksError);
@@ -30,6 +29,8 @@ const TrecksList = () => {
 
     const deleteError = useAppSelector(selectDeleteTreckError);
     const isDeleteLoading = useAppSelector(selectDeleteTreckLoading);
+    const publicateError = useAppSelector(selectPublicateTreckError);
+    const publicateLoading = useAppSelector(selectPublicateTreckLoading);
     const dispatch = useAppDispatch();
 
     const deleteFunc = async (id: string) => {
@@ -67,12 +68,18 @@ const TrecksList = () => {
   }, [getData, dispatch]);
     return (
       <List sx={{ width: "100%", maxWidth: 520, bgcolor: "background.paper" }}>
-        {isLoading && <Spinner />}
-        {isError && <Alert severity="error">Оибка при загрузке</Alert>}
-        {isDeleteLoading && <Spinner />}
+        {isLoading && isDeleteLoading && publicateLoading && <Spinner />}
+        {publicateError && <Alert severity="error">{publicateError.error}</Alert>}
+        {isError && <Alert severity="error">Ошибка при загрузке</Alert>}
         {deleteError && <Alert severity="error">{deleteError.error}</Alert>}
+
         {trecks.map((treck) => (
-          <TreckItem key={treck._id} deleteFunc={deleteFunc} publicateFunc={publicateFunc} treck={treck} />
+          <TreckItem
+            key={treck._id}
+            deleteFunc={deleteFunc}
+            publicateFunc={publicateFunc}
+            treck={treck}
+          />
         ))}
       </List>
     );

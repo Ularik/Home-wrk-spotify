@@ -5,22 +5,20 @@ import type { RootState } from "../../../app/store";
 import type { ValidationError } from "../../../types";
 import { isAxiosError } from "axios";
 
-
 export const fetchArtists = createAsyncThunk<
   Artist[],
   void,
   { rejectValue: GlobalError }
->("artists/fetchArtists", 
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await axiosApi.get<Artist[]>("/artists/");
-      return res.data;
-    } catch(err) {
-      if (isAxiosError(err) && err.response && err.response.status === 400) {
-        return rejectWithValue(err.response.data);
-      }
-      throw err;
+>("artists/fetchArtists", async (_, { rejectWithValue }) => {
+  try {
+    const res = await axiosApi.get<Artist[]>("/artists/");
+    return res.data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response && err.response.status === 400) {
+      return rejectWithValue(err.response.data);
     }
+    throw err;
+  }
 });
 
 export const fetchArtistById = createAsyncThunk<
@@ -42,9 +40,8 @@ export const fetchArtistById = createAsyncThunk<
 export const createArtist = createAsyncThunk<
   Artist,
   ArtistMutatiion,
-  { state: RootState; rejectValue: ValidationError }
->("artists/createArtist",
-   async (artistForm, { rejectWithValue }) => {
+  { rejectValue: ValidationError }
+>("artists/createArtist", async (artistForm, { rejectWithValue }) => {
   const formData = new FormData();
   const keys = Object.keys(artistForm) as (keyof ArtistMutatiion)[];
   keys.forEach((key) => {
@@ -56,6 +53,25 @@ export const createArtist = createAsyncThunk<
 
   try {
     const res = await axiosApi.post<Artist>(`/artists/`, formData);
+    return res.data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response && err.response.status === 400) {
+      return rejectWithValue(err.response.data);
+    }
+    throw err;
+  }
+});
+
+export const publicateArtist = createAsyncThunk<
+  Artist,
+  string,
+  { rejectValue: GlobalError }
+>("artists/publicateArtist", 
+  async (artistId, { rejectWithValue }) => {
+  try {
+    const res = await axiosApi.patch<Artist>(
+      `/artists/${artistId}/togglePublished`,
+    );
     return res.data;
   } catch (err) {
     if (isAxiosError(err) && err.response && err.response.status === 400) {

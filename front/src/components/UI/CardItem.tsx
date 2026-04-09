@@ -4,24 +4,34 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import ImageNotFound from "../../assets/imageNotFound.jpeg";
 import { apiURL } from "../../constants";
+import { selectUser } from "../users/store/usersSelectors";
+import { useAppSelector } from "../../app/hooks";
+
 
 interface Props {
+  id: string;
   title: string;
   image: string | null;
+  publicateFunc: (id: string) => void;
+  navGate: () => void;
   isPublished: boolean;
   year_manufacture?: number;
   count?: number;
 }
 
 const CardItem: React.FC<Props> = ({
+  id,
   title,
   image,
+  publicateFunc,
+  navGate,
   isPublished,
   year_manufacture,
   count,
 }) => {
-
   const imageCard = image ? apiURL + '/' + image : ImageNotFound;
+
+  const user = useAppSelector(selectUser);
   return (
     <Card
       sx={{
@@ -43,17 +53,25 @@ const CardItem: React.FC<Props> = ({
         image={imageCard}
         alt="image"
       />
-      {!isPublished && <CardContent
-        sx={{
-          position: "absolute",
-          top: 0,
-          zIndex: 2,
-          backgroundColor: "rgba(84, 0, 0, 0.5)",
-          color: "white",
-        }}
-      >Неопубликованно</CardContent>}
+      {!isPublished && user && user.role === "admin" && (
+        <CardContent
+          onClick={() => publicateFunc(id)}
+          sx={{
+            position: "absolute",
+            cursor: "pointer",
+            top: 0,
+            zIndex: 2,
+            backgroundColor: "rgba(84, 0, 0, 0.5)",
+            color: "white",
+          }}
+        >
+          Неопубликованно
+        </CardContent>
+      )}
       <CardContent
+        onClick={() => navGate()}
         sx={{
+          cursor: "pointer",
           position: "absolute",
           bottom: 0,
           width: "100%",

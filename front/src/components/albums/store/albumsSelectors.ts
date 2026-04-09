@@ -9,4 +9,10 @@ export const selectIsAlbumError = (state: RootState) => state.albums.fetchError;
 
 export const selectIsAlbumCreateLoading = (state: RootState) =>
   state.albums.createLoading;
-export const selectIsAlbumCreateError = (state: RootState) => state.albums.createError;
+export const selectIsAlbumCreateError = (state: RootState) =>
+  state.albums.createError;
+
+export const selectPublicateAlbumLoading = (state: RootState) =>
+  state.albums.publicateLoading;
+export const selectPublicateAlbumError = (state: RootState) =>
+  state.albums.publicateError;

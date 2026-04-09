@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Artist, GlobalError, ValidationError } from "../../../types";
-import { fetchArtists, fetchArtistById, createArtist } from "./artistsThunks";
+import {
+  fetchArtists,
+  fetchArtistById,
+  createArtist,
+  publicateArtist,
+} from "./artistsThunks";
 
 interface ArtistsState {
   artists: Artist[];
@@ -9,6 +14,8 @@ interface ArtistsState {
   error: GlobalError | null;
   createLoading: boolean;
   createError: ValidationError | null;
+  publicateLoading: boolean;
+  publicateError: GlobalError | null
 }
 
 const initialState: ArtistsState = {
@@ -18,6 +25,8 @@ const initialState: ArtistsState = {
   error: null,
   createLoading: false,
   createError: null,
+  publicateLoading: false,
+  publicateError: null
 };
 
 export const artistsSlice = createSlice({
@@ -61,6 +70,19 @@ export const artistsSlice = createSlice({
     builder.addCase(createArtist.rejected, (state, { payload: error }) => {
       state.createLoading = false;
       state.createError = error || null;
+    });
+
+    builder.addCase(publicateArtist.pending, (state) => {
+      state.publicateLoading = true;
+      state.publicateError = null;
+    });
+    builder.addCase(publicateArtist.fulfilled, (state, { payload: artist }) => {
+      state.artist = artist;
+      state.publicateLoading = false;
+    });
+    builder.addCase(publicateArtist.rejected, (state, { payload: error }) => {
+      state.publicateLoading = false;
+      state.publicateError = error || null;
     });
   },
 });
