@@ -11,9 +11,11 @@ const permit = (...roles: string[]) => {
     }
 
     if (!roles.includes(req.user.role)) {
-      return res.status(403).send({ message: "Unauthorized" });
+      return res.status(403).send({ message: "You dont have rights" });
     }
 
     next();
   };
 };
+
+export default permit;

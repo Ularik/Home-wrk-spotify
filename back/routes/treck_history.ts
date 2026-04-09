@@ -4,21 +4,14 @@ import type { PopulatedTreck } from "../types";
 import UsersOrm from "../models/Users";
 import { Types } from "mongoose";
 import AlbumsOrm from "../models/Albums";
+import auth from "../middlewares/auth";
+import { RequestWithUser } from "../middlewares/auth";
 
 const trecks_history_Router = express.Router();
 
 
-trecks_history_Router.get("/", async (req, res) => {
-  const token = req.get("Authorization");
-  if (!token) {
-    res.status(401).send({ error: "Unauthorized" });
-    return
-  }
-
-  const user = await UsersOrm.findOne({ token });
-  if (!user) {
-    return res.status(401).send({ error: "Wrong token!" });
-  }
+trecks_history_Router.get("/", auth, async (req, res) => {
+  const user = (req as RequestWithUser).user
 
   try {
     const trecks_history = await TrecksHistoryOrm.find({
@@ -44,19 +37,11 @@ trecks_history_Router.get("/", async (req, res) => {
 });
 
 
-trecks_history_Router.post("/", async (req, res) => {
-  const token = req.get("Authorization");
-  if (!token) {
-    res.status(401).send({ error: "Unauthorized" });
-    return;
-  }
+trecks_history_Router.post("/", auth, async (req, res) => {
+  const user = (req as RequestWithUser).user;
+
   const treck_id = req.body.treckId;
   try {
-    const user = await UsersOrm.findOne({ token: token });
-    if (!user) {
-      return res.status(400).send({ error: "Wrong token!" });
-    }
-
     const trecks_history = new TrecksHistoryOrm({
       user_id: user._id,
       treck_id: treck_id,

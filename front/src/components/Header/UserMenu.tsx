@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { Button, Menu, MenuItem } from "@mui/material";
+import { Box, Button, Menu, MenuItem } from "@mui/material";
 import type { User } from "../../types";
 import { NavLink } from "react-router";
+import { logout } from "../users/store/usersThunks";
+import { useAppDispatch } from "../../app/hooks";
+
 
 interface Props {
   user: User;
 }
 
 const UserMenu: React.FC<Props> = ({ user }) => {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -18,8 +22,26 @@ const UserMenu: React.FC<Props> = ({ user }) => {
     setAnchorEl(null);
   };
 
+  const logoutClick = async (e: React.MouseEvent) => {
+    await dispatch(logout());
+  }
+
   return (
-    <>
+    <Box display={"flex"} justifyContent={"space-between"} gap={3}>
+      <Button
+        variant="text"
+        component={NavLink}
+        to="/add-artist"
+        color="inherit"
+      >
+        Add Artist
+      </Button>
+      <Button variant="text" component={NavLink} to="/" color="inherit">
+        Add Album
+      </Button>
+      <Button variant="text" component={NavLink} to="/" color="inherit">
+        Add Treck
+      </Button>
       <Button onClick={handleClick} color="inherit">
         Hello, {user.username}
       </Button>
@@ -36,9 +58,9 @@ const UserMenu: React.FC<Props> = ({ user }) => {
           </Button>
         </MenuItem>
         <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={logoutClick}>Logout</MenuItem>
       </Menu>
-    </>
+    </Box>
   );
 };
 

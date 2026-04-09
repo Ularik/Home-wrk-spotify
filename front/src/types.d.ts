@@ -38,7 +38,7 @@ export interface ValidationError {
 export interface Artist {
   _id: string;
   name: string;
-  image: string | null;
+  image: File | null;
   description: string | null;
 }
 
@@ -50,7 +50,7 @@ export interface ArtistOnlyName {
 
 export interface ArtistMutatiion {
   name: string;
-  image: string | null;
+  image: File | null;
   description: string | null;
 }
 
@@ -84,7 +84,7 @@ export interface AlbumWithArtist {
 export interface AlbumMutation {
   title: string;
   artist: string;
-  image: string | null;
+  image: File | null;
   year_manufacture: number;
 }
 

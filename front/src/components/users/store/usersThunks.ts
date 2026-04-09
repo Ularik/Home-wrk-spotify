@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import type { RootState } from "../../../app/store";
 import type {
   RegisterMutation,
   AuthResponse,
   ValidationError,
-  User,
   LoginMutation,
   GlobalError,
 } from "../../../types";
@@ -55,5 +55,17 @@ export const login = createAsyncThunk<
 
       throw e;
     }
+  },
+);
+
+
+export const logout = createAsyncThunk<void, void, { state: RootState }>(
+  "users/logout",
+  async (_, { getState }) => {
+    const token = getState().users.user?.token;
+
+    await axiosApi.delete("/users/sessions", {
+      headers: { Authorization: "Bearer " + token },
+    });
   },
 );

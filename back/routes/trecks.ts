@@ -1,10 +1,14 @@
 import express from "express";
 import TrecksOrm from "../models/Trecks";
 import { TreckMutation } from "../types";
+import auth from "../middlewares/auth";
+import { RequestWithUser } from "../middlewares/auth";
+import permit from "../middlewares/peermit";
+
 
 const trecksRouter = express.Router();
 
-trecksRouter.post("/", async (req, res) => {
+trecksRouter.post("/", auth, async (req, res) => {
   const data: TreckMutation = {
     title: req.body.title,
     album: req.body.album,
@@ -18,7 +22,7 @@ trecksRouter.post("/", async (req, res) => {
     res.send(treck);
   } catch (err) {
     console.error(err);
-    res.sendStatus(500);
+    res.status(400).send({error: "Error in create treck"});
   }
 });
 
@@ -31,6 +35,34 @@ trecksRouter.get("/", async (req, res) => {
     }
     const trecks = await TrecksOrm.find();
     return res.send(trecks);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
+
+trecksRouter.patch("/:id", auth, permit('admin'), async (req, res) => {
+  const { id } = req.params;
+  try {
+    const treck = await TrecksOrm.findById(id);
+    if (!treck) return res.status(400).send({ error: "Treck doesnt exist" });
+    treck.isPublished = !treck.isPublished;
+    await treck.save();
+
+    return res.send(treck);
+  } catch (err) {
+    res.sendStatus(500);
+  }
+});
+
+trecksRouter.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const treck = await TrecksOrm.findById(id);
+    if (!treck) return res.status(400).send({error: 'Treck doesnt exist'});
+    await treck?.deleteOne();
+
+    return res.send({success: 'seccess delete'});
   } catch (err) {
     res.sendStatus(500);
   }

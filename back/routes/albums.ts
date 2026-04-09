@@ -1,12 +1,15 @@
 import express from "express";
 import { AlbumMutation, AlbumWithCountOfTrecks } from "../types";
-import { imagesUpload } from "../multer";
+import { imagesUpload } from "../middlewares/multer";
 import AlbumsOrm from "../models/Albums";
 import TrecksOrm from "../models/Trecks";
+import auth from "../middlewares/auth";
+import permit from "../middlewares/peermit";
+
 
 const albumsRouter = express.Router();
 
-albumsRouter.post("/", imagesUpload.single("image"), async (req, res) => {
+albumsRouter.post("/", auth, imagesUpload.single("image"), async (req, res) => {
   const data: AlbumMutation = {
     title: req.body.title,
     image: req.file ? "images/" + req.file.filename : null,
@@ -52,15 +55,42 @@ albumsRouter.get("/", async (req, res) => {
 albumsRouter.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const filteredAlbums = await AlbumsOrm.find({ _id: id }).populate(
-      "artist",
-      "name",
-    );
-    if (filteredAlbums.length) return res.send(filteredAlbums[0]);
+    const album = await AlbumsOrm.findById(id).populate("artist", "name");
+    if (album) return res.send(album);
     return res.send({});
   } catch (err) {
     return res.sendStatus(500);
   }
 });
+
+
+albumsRouter.get("/:id/togglePublished", auth, permit('admin'), async (req, res) => {
+  const { id } = req.params;
+  try {
+    const album = await AlbumsOrm.findById(id);
+    if (album) {
+      album.isPublished = !album.isPublished;
+      await album.save();
+      return res.send(album);
+    }
+    return res.send({error: 'album not exists'});
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
+
+
+albumsRouter.delete("/:id", auth, permit('admin'), async (req, res) => {
+  const { id } = req.params;
+  try {
+    const album = await AlbumsOrm.findById(id);
+    if (!album) return res.status(400).send({error: 'album does not exists'});
+    await album?.deleteOne();
+    return res.send({success: 'delete'});
+  } catch (err) {
+    return res.sendStatus(500);
+  }
+});
+
 
 export default albumsRouter;

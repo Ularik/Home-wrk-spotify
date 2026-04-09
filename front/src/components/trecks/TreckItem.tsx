@@ -31,12 +31,16 @@ const TreckItem: React.FC<Props> = ({ treck }) => {
         disableGutters
         secondaryAction={
           <>
-            <ListItemButton onClick={() => sendTreckToHistory(treck._id)}>
-              <ListItemIcon>
-                <PlayCircleIcon />
-              </ListItemIcon>
+            {user ? (
+              <ListItemButton onClick={() => sendTreckToHistory(treck._id)}>
+                <ListItemIcon>
+                  <PlayCircleIcon />
+                </ListItemIcon>
+                <Typography>{treck.duration}</Typography>
+              </ListItemButton>
+            ) : (
               <Typography>{treck.duration}</Typography>
-            </ListItemButton>
+            )}
           </>
         }
       >
