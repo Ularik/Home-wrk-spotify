@@ -9,7 +9,9 @@ import { Error } from "mongoose";
 const trecksRouter = express.Router();
 
 trecksRouter.post("/", auth, async (req, res, next) => {
+  const user = (req as RequestWithUser).user;
   const data: TreckMutation = {
+    user: String(user._id),
     title: req.body.title,
     album: req.body.album,
     number_in_album: req.body.number_in_album,

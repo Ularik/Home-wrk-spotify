@@ -62,6 +62,13 @@ UsersSchema.pre("save", async function () {
     }
 });
 
+UsersSchema.methods.generateToken = function () {
+  this.token = jwt.sign({ _id: this._id }, config.jwtSecret, {
+    expiresIn: "7d",
+  });
+};
+
+
 UsersSchema.set("toJSON", {
   transform: (doc, ret, options) => {
     const { password, ...rets } = ret;
@@ -71,12 +78,6 @@ UsersSchema.set("toJSON", {
 
 UsersSchema.methods.checkPassword = function (password) {
   return argon2.verify(this.password, password);
-};
-
-UsersSchema.methods.generateToken = async function () {
-  this.token = jwt.sign({ _id: this._id }, config.jwtSecret, {
-    expiresIn: "7d",
-  });
 };
 
 const UsersOrm = mongoose.model<UsersFields, UsersModel>("Users", UsersSchema);

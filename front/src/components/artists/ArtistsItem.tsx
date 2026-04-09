@@ -12,7 +12,7 @@ const ArtistsItem: React.FC<Props> = ({ artist }) => {
 
   return (
     <Button onClick={() => navigate(`/albums?artistId=${artist._id}`)}>
-      <CardItem title={artist.name} image={artist.image} />
+      <CardItem title={artist.name} isPublished={artist.isPublished} image={artist.image} />
     </Button>
   );
 };

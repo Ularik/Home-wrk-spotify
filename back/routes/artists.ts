@@ -5,12 +5,16 @@ import permit from "../middlewares/peermit";
 import { ArtistMutatiion } from "../types";
 import { imagesUpload } from "../middlewares/multer";
 import { Error } from "mongoose";
+import { RequestWithUser } from "../middlewares/auth";
 
 
 const artistsRouter = express.Router();
 
 artistsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, next) => {
+    const user = (req as RequestWithUser).user;
+
     const data: ArtistMutatiion = {
+      user: String(user._id),
       name: req.body.name,
       image: req.file ? "images/" + req.file.filename : null,
       description: req.body.description,
@@ -29,11 +33,17 @@ artistsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, nex
 });
 
 
-artistsRouter.get("/", async (req, res) => {
+artistsRouter.get("/", auth, async (req, res) => {
+  const user = (req as RequestWithUser).user;
 
   try {
-    const artist = await ArtistsOrm.find({isPublished: true});
-    res.send(artist);
+    let artists = [];
+    if (user.role === 'user') {
+      artists = await ArtistsOrm.find({ isPublished: true });
+    } else {
+      artists = await ArtistsOrm.find();
+    }
+    res.send(artists);
   } catch (err) {
     console.log(err);
     res.sendStatus(500);

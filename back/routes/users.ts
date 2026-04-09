@@ -76,7 +76,7 @@ usersRouter.delete("/sessions", async (req, res, next) => {
 
     const user = await UsersOrm.findOne({ token });
     if (!user) return res.send(success);
-    user.token = "";
+    user.generateToken()
     user.save();
     return res.send(success);
   } catch (e) {

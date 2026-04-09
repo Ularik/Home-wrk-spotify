@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import type { Treck, ValidationError } from "../../../types";
-import { fetchTrecks, createTrecks } from "./trecksThunks";
+import type { GlobalError, Treck, ValidationError } from "../../../types";
+import { fetchTrecks, createTrecks, deleteTrecks, publicateTreck } from "./trecksThunks";
 
 
 interface TrecksState {
@@ -8,7 +8,11 @@ interface TrecksState {
   fetchLoading: boolean;
   fetchError: boolean;
   createLoading: boolean;
-  createError: ValidationError | null
+  createError: ValidationError | null;
+  deleteLoading: boolean;
+  deleteError: GlobalError | null;
+  publicateLoading: boolean;
+  publicateError: GlobalError | null;
 }
 
 const initialState: TrecksState = {
@@ -16,7 +20,11 @@ const initialState: TrecksState = {
   fetchLoading: false,
   fetchError: false,
   createLoading: false,
-  createError: null
+  createError: null,
+  deleteLoading: false,
+  deleteError: null,
+  publicateLoading: false,
+  publicateError: null
 };
 
 export const trecksSlice = createSlice({
@@ -47,6 +55,30 @@ export const trecksSlice = createSlice({
     builder.addCase(createTrecks.rejected, (state, { payload: error }) => {
       state.createLoading = false;
       state.createError = error || null;
+    });
+
+    builder.addCase(deleteTrecks.pending, (state) => {
+      state.deleteLoading = true;
+      state.deleteError = null;
+    });
+    builder.addCase(deleteTrecks.fulfilled, (state) => {
+      state.deleteLoading = false;
+    });
+    builder.addCase(deleteTrecks.rejected, (state, { payload: error }) => {
+      state.deleteLoading = false;
+      state.deleteError = error || null;
+    });
+
+    builder.addCase(publicateTreck.pending, (state) => {
+      state.publicateLoading = true;
+      state.publicateError = null;
+    });
+    builder.addCase(publicateTreck.fulfilled, (state) => {
+      state.publicateLoading = false;
+    });
+    builder.addCase(publicateTreck.rejected, (state, { payload: error }) => {
+      state.publicateLoading = false;
+      state.publicateError = error || null;
     });
   },
 });

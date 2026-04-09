@@ -3,7 +3,7 @@ import { AlbumMutation, AlbumWithCountOfTrecks } from "../types";
 import { imagesUpload } from "../middlewares/multer";
 import AlbumsOrm from "../models/Albums";
 import TrecksOrm from "../models/Trecks";
-import auth from "../middlewares/auth";
+import auth, { RequestWithUser } from "../middlewares/auth";
 import permit from "../middlewares/peermit";
 import { Error } from "mongoose";
 
@@ -11,7 +11,9 @@ import { Error } from "mongoose";
 const albumsRouter = express.Router();
 
 albumsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, next) => {
+  const user = (req as RequestWithUser).user;
   const data: AlbumMutation = {
+    user: String(user._id),
     title: req.body.title,
     image: req.file ? "images/" + req.file.filename : null,
     artist: req.body.artist,

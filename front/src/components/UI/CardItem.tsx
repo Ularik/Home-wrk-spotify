@@ -8,6 +8,7 @@ import { apiURL } from "../../constants";
 interface Props {
   title: string;
   image: string | null;
+  isPublished: boolean;
   year_manufacture?: number;
   count?: number;
 }
@@ -15,6 +16,7 @@ interface Props {
 const CardItem: React.FC<Props> = ({
   title,
   image,
+  isPublished,
   year_manufacture,
   count,
 }) => {
@@ -41,6 +43,15 @@ const CardItem: React.FC<Props> = ({
         image={imageCard}
         alt="image"
       />
+      {!isPublished && <CardContent
+        sx={{
+          position: "absolute",
+          top: 0,
+          zIndex: 2,
+          backgroundColor: "rgba(84, 0, 0, 0.5)",
+          color: "white",
+        }}
+      >Неопубликованно</CardContent>}
       <CardContent
         sx={{
           position: "absolute",

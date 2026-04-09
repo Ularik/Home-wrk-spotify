@@ -17,6 +17,7 @@ export interface User {
   _id: string;
   username: string;
   token: string;
+  role: string
 }
 
 export interface GlobalError {
@@ -38,8 +39,9 @@ export interface ValidationError {
 export interface Artist {
   _id: string;
   name: string;
-  image: File | null;
+  image: string | null;
   description: string | null;
+  isPublished: boolean;
 }
 
 
@@ -73,6 +75,7 @@ export interface Album {
   trecksCount: number;
   image: string | null;
   year_manufacture: number;
+  isPublished: boolean;
 }
 
 export interface AlbumWithArtist {
@@ -94,6 +97,7 @@ export interface Treck {
   album: Album;
   number_in_album: number;
   duration: string;
+  isPublished: boolean;
 }
 
 export interface TreckLite {

@@ -6,9 +6,11 @@ export interface Artist {
   name: string;
   image: string | null;
   description: string | null;
+  isPublished: boolean
 }
 
 export interface ArtistMutatiion {
+  user: string,
   name: string;
   image: string | null;
   description: string | null;
@@ -20,6 +22,7 @@ export interface Album {
   artist: Artist;
   image: string | null;
   year_manufacture: Number;
+  isPublished: boolean;
 }
 
 export interface AlbumWithCountOfTrecks {
@@ -32,6 +35,7 @@ export interface AlbumWithCountOfTrecks {
 }
 
 export interface AlbumMutation {
+  user: string;
   title: string;
   artist: string;
   image: string | null;
@@ -44,9 +48,11 @@ export interface Treck {
   album: Album;
   number_in_album: Number;
   duration: string;
+  isPublished: boolean;
 }
 
 export interface TreckMutation {
+  user: string;
   title: string;
   album: string;
   number_in_album: Number;

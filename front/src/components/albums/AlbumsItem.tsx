@@ -15,6 +15,7 @@ const AlbumsItem: React.FC<Props> = ({ album }) => {
       <CardItem
         title={album.title}
         image={album.image}
+        isPublished={album.isPublished}
         year_manufacture={album.year_manufacture}
         count={album.trecksCount}
       />

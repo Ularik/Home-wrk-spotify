@@ -5,6 +5,7 @@ import { fetchTrecksHistory, playTreck } from "./historyThunks";
 interface TrecksHistoryState {
   history: TreckHistory[];
   albums: AlbumWithArtist[];
+  currentPlayingId: string | null;
   isLoading: boolean;
   error: boolean;
 }
@@ -12,6 +13,7 @@ interface TrecksHistoryState {
 const initialState: TrecksHistoryState = {
   history: [],
   albums: [],
+  currentPlayingId: null,
   isLoading: false,
   error: false,
 };
@@ -38,16 +40,19 @@ export const trecksHistorySlice = createSlice({
       state.error = true;
     });
 
-    builder.addCase(playTreck.pending, (state) => {
+    builder.addCase(playTreck.pending, (state, action) => {
         state.isLoading = true;
         state.error = false;
+        state.currentPlayingId = action.meta.arg.treckId;
     });
     builder.addCase(playTreck.fulfilled, (state) => {
         state.isLoading = false;
+        state.currentPlayingId = null;
     });
     builder.addCase(playTreck.rejected, (state) => {
         state.isLoading = false;
         state.error = true;
+        state.currentPlayingId = null;
     });
   },
 });
