@@ -66,13 +66,30 @@ export const publicateArtist = createAsyncThunk<
   Artist,
   string,
   { rejectValue: GlobalError }
->("artists/publicateArtist", 
-  async (artistId, { rejectWithValue }) => {
+>("artists/deleteArtist", async (artistId, { rejectWithValue }) => {
   try {
     const res = await axiosApi.patch<Artist>(
       `/artists/${artistId}/togglePublished`,
     );
     return res.data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response && err.response.status === 400) {
+      return rejectWithValue(err.response.data);
+    }
+    throw err;
+  }
+});
+
+export const deleteArtist = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: GlobalError }
+>("artists/publicateArtist", 
+  async (artistId, { rejectWithValue }) => {
+  try {
+    await axiosApi.delete(
+      `/artists/${artistId}`,
+    );
   } catch (err) {
     if (isAxiosError(err) && err.response && err.response.status === 400) {
       return rejectWithValue(err.response.data);

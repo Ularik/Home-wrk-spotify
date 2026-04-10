@@ -7,8 +7,10 @@ import {
   selectAlbums,
   selectIsAlbumLoading,
   selectIsAlbumError,
+  selectDeleteAlbumError,
+  selectDeleteAlbumLoading
 } from "./store/albumsSelectors";
-import { publicateAlbum } from "./store/albumsThunks";
+import { publicateAlbum, deleteAlbum } from "./store/albumsThunks";
 import { useEffect, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectOneArtist } from "../artists/store/artistsSelectors";
@@ -33,6 +35,17 @@ const AlbumsList = () => {
       }
     };
 
+    const deleteLoading = useAppSelector(selectDeleteAlbumLoading);
+    const deleteError = useAppSelector(selectDeleteAlbumError);
+    const deleteFunc = async (id: string) => {
+      try {
+        await dispatch(deleteAlbum(id)).unwrap();
+        if (artistId) dispatch(fetchAlbums(artistId));
+      } catch(err) {
+        console.log(err);
+      }
+    }
+
     const getData = useCallback(async () => {
       if (artistId) {
         dispatch(fetchAlbums(artistId));
@@ -46,11 +59,15 @@ const AlbumsList = () => {
 
   return (
     <Box sx={{ display: "flex", gap: 3, padding: 5 }}>
-      {isLoading && <Spinner />}
+      {(isLoading || deleteLoading) && <Spinner />}
+
       {error && <Alert severity="error">{error.error}</Alert>}
+      {deleteError && <Alert severity="error">{deleteError.error}</Alert>}
+
       {albums.map((album) => (
         <AlbumsItem
           key={album._id}
+          deleteFunc={deleteFunc}
           publicateFunc={publicateFunc}
           album={album}
         />

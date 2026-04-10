@@ -12,6 +12,7 @@ interface Props {
   id: string;
   title: string;
   image: string | null;
+  deleteFunc: (id: string) => void;
   publicateFunc: (id: string) => void;
   navGate: () => void;
   isPublished: boolean;
@@ -23,6 +24,7 @@ const CardItem: React.FC<Props> = ({
   id,
   title,
   image,
+  deleteFunc,
   publicateFunc,
   navGate,
   isPublished,
@@ -66,6 +68,22 @@ const CardItem: React.FC<Props> = ({
           }}
         >
           Неопубликованно
+        </CardContent>
+      )}
+      {user && user.role === "admin" && (
+        <CardContent
+          onClick={() => deleteFunc(id)}
+          sx={{
+            position: "absolute",
+            cursor: "pointer",
+            top: 0,
+            right: 0,
+            zIndex: 2,
+            backgroundColor: "rgba(192, 8, 8, 0.5)",
+            color: "white",
+          }}
+        >
+          Удалить
         </CardContent>
       )}
       <CardContent

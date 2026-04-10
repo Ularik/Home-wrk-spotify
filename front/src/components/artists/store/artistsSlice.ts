@@ -5,6 +5,7 @@ import {
   fetchArtistById,
   createArtist,
   publicateArtist,
+  deleteArtist
 } from "./artistsThunks";
 
 interface ArtistsState {
@@ -15,7 +16,9 @@ interface ArtistsState {
   createLoading: boolean;
   createError: ValidationError | null;
   publicateLoading: boolean;
-  publicateError: GlobalError | null
+  publicateError: GlobalError | null;
+  deleteLoading: boolean;
+  deleteError: GlobalError | null;
 }
 
 const initialState: ArtistsState = {
@@ -26,7 +29,9 @@ const initialState: ArtistsState = {
   createLoading: false,
   createError: null,
   publicateLoading: false,
-  publicateError: null
+  publicateError: null,
+  deleteLoading: false,
+  deleteError: null
 };
 
 export const artistsSlice = createSlice({
@@ -84,8 +89,21 @@ export const artistsSlice = createSlice({
       state.publicateLoading = false;
       state.publicateError = error || null;
     });
+
+    builder.addCase(deleteArtist.pending, (state) => {
+      state.deleteLoading = true;
+      state.deleteError = null;
+    });
+    builder.addCase(deleteArtist.fulfilled, (state) => {
+      state.deleteLoading = false;
+    });
+    builder.addCase(deleteArtist.rejected, (state, { payload: error }) => {
+      state.deleteLoading = false;
+      state.deleteError = error || null;
+    });
   },
 });
+
 
 const artistsReducer = artistsSlice.reducer;
 export default artistsReducer;

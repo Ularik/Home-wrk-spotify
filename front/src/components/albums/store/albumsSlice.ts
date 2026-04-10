@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { Album, AlbumWithArtist, GlobalError, ValidationError } from "../../../types";
-import { fetchAlbums, fetchAlbumWithArtist, createAlbum, publicateAlbum } from "./albumsThunks";
+import {
+  fetchAlbums,
+  fetchAlbumWithArtist,
+  createAlbum,
+  publicateAlbum,
+  deleteAlbum,
+} from "./albumsThunks";
 
 interface AlbumsState {
   albums: Album[];
@@ -11,6 +17,8 @@ interface AlbumsState {
   createError: ValidationError | null;
   publicateLoading: boolean;
   publicateError: GlobalError | null;
+  deleteLoading: boolean;
+  deleteError: GlobalError | null
 }
 
 const initialState: AlbumsState = {
@@ -21,7 +29,9 @@ const initialState: AlbumsState = {
   createLoading: false,
   createError: null,
   publicateLoading: false,
-  publicateError: null
+  publicateError: null,
+  deleteLoading: false,
+  deleteError: null
 };
 
 export const albumsSlice = createSlice({
@@ -85,6 +95,17 @@ export const albumsSlice = createSlice({
     builder.addCase(publicateAlbum.rejected, (state, { payload: error }) => {
       state.publicateLoading = false;
       state.publicateError = error || null;
+    });
+
+    builder.addCase(deleteAlbum.pending, (state) => {
+      state.deleteLoading = true;
+    });
+    builder.addCase(deleteAlbum.fulfilled, (state) => {
+      state.deleteLoading = false;
+    });
+    builder.addCase(deleteAlbum.rejected, (state, { payload: error }) => {
+      state.deleteLoading = false;
+      state.deleteError = error || null;
     });
   },
 });

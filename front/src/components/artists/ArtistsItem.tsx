@@ -4,10 +4,11 @@ import { useNavigate } from "react-router";
 
 interface Props {
   artist: Artist;
+  deleteArtistFunc: (id: string) => void;
   publicateAlbumFunc: (id: string) => void;
 }
 
-const ArtistsItem: React.FC<Props> = ({ artist, publicateAlbumFunc }) => {
+const ArtistsItem: React.FC<Props> = ({ artist, deleteArtistFunc, publicateAlbumFunc }) => {
   const navigate = useNavigate();
 
   const navGate = () => {
@@ -19,6 +20,7 @@ const ArtistsItem: React.FC<Props> = ({ artist, publicateAlbumFunc }) => {
       <CardItem
         id={artist._id}
         title={artist.name}
+        deleteFunc={deleteArtistFunc}
         publicateFunc={publicateAlbumFunc}
         navGate={navGate}
         isPublished={artist.isPublished}

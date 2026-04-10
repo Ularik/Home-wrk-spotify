@@ -16,3 +16,8 @@ export const selectPublicateAlbumLoading = (state: RootState) =>
   state.albums.publicateLoading;
 export const selectPublicateAlbumError = (state: RootState) =>
   state.albums.publicateError;
+
+export const selectDeleteAlbumLoading = (state: RootState) =>
+  state.albums.deleteLoading;
+export const selectDeleteAlbumError = (state: RootState) =>
+  state.albums.deleteError;

@@ -17,38 +17,29 @@ export const fetchAlbums = createAsyncThunk<
   try {
     const res = await axiosApi.get<Album[]>(`/albums/?id=${artist_id}`);
     return res.data;
-  } catch(err) {
-      if (
-        isAxiosError(err) &&
-        err.response &&
-        err.response.status === 400
-      ) {
-        return rejectWithValue(err.response.data);
-      }
-      throw err;
+  } catch (err) {
+    if (isAxiosError(err) && err.response && err.response.status === 400) {
+      return rejectWithValue(err.response.data);
+    }
+    throw err;
   }
-
 });
 
-export const fetchAlbumWithArtist = createAsyncThunk<AlbumWithArtist, string, {rejectValue: GlobalError }>(
-  "albums/fetchAlbumWithArtist",
-  async (albumId, { rejectWithValue}) => {
-    try {
-      const res = await axiosApi.get<AlbumWithArtist>(`/albums/${albumId}`);
-      return res.data;
-    } catch(err) {
-        if (
-          isAxiosError(err) &&
-          err.response &&
-          err.response.status === 400
-        ) {
-          return rejectWithValue(err.response.data);
-        }
-        throw err;
+export const fetchAlbumWithArtist = createAsyncThunk<
+  AlbumWithArtist,
+  string,
+  { rejectValue: GlobalError }
+>("albums/fetchAlbumWithArtist", async (albumId, { rejectWithValue }) => {
+  try {
+    const res = await axiosApi.get<AlbumWithArtist>(`/albums/${albumId}`);
+    return res.data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response && err.response.status === 400) {
+      return rejectWithValue(err.response.data);
     }
-
-  },
-);
+    throw err;
+  }
+});
 
 export const createAlbum = createAsyncThunk<
   Album,
@@ -78,12 +69,26 @@ export const publicateAlbum = createAsyncThunk<
   string,
   { rejectValue: GlobalError }
 >("albums/publicateAlbum", async (album_id, { rejectWithValue }) => {
-
   try {
     const res = await axiosApi.patch<Album>(
       `/albums/${album_id}/togglePublished`,
     );
     return res.data;
+  } catch (err) {
+    if (isAxiosError(err) && err.response && err.response.status === 400) {
+      return rejectWithValue(err.response.data);
+    }
+    throw err;
+  }
+});
+
+export const deleteAlbum = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: GlobalError }
+>("albums/deleteAlbum", async (albumId, { rejectWithValue }) => {
+  try {
+    await axiosApi.delete(`/albums/${albumId}`);
   } catch (err) {
     if (isAxiosError(err) && err.response && err.response.status === 400) {
       return rejectWithValue(err.response.data);

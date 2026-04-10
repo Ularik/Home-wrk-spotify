@@ -13,3 +13,8 @@ export const selectPublicateLoading = (state: RootState) =>
   state.artists.publicateLoading;
 export const selectPublicateError = (state: RootState) =>
   state.artists.publicateError;
+
+export const selectDeleteLoading = (state: RootState) =>
+  state.artists.deleteLoading;
+export const selectDeleteError = (state: RootState) =>
+  state.artists.deleteError;

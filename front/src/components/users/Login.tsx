@@ -68,6 +68,7 @@ const Login = () => {
           <Grid container spacing={2}>
             <Grid size={12}>
               <TextField
+                fullWidth
                 label="username"
                 name="username"
                 autoComplete="current-username"
@@ -78,6 +79,7 @@ const Login = () => {
 
             <Grid size={12}>
               <TextField
+                fullWidth
                 label="Password"
                 name="password"
                 type="password"
