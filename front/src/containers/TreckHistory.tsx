@@ -15,7 +15,7 @@ const TreckHistory = () => {
   const user = useAppSelector(selectUser);
 
   const fetchData = useCallback(async () => {
-    if (user) await dispatch(fetchTrecksHistory(user.token));
+    if (user) await dispatch(fetchTrecksHistory());
   }, [dispatch, fetchTrecksHistory])
 
   useEffect(() => {

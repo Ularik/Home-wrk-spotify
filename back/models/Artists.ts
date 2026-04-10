@@ -30,5 +30,19 @@ const ArtistsSchema = new mongoose.Schema({
   description: String,
 });
 
+
+ArtistsSchema.pre("findOneAndDelete", async function () {
+    const docToDelete = await this.model.findOne(this.getQuery());
+    if (docToDelete) {
+      if (docToDelete) {
+        const AlbumsOrm = mongoose.model("Albums");
+        const albums = await AlbumsOrm.find({ artist: docToDelete._id });
+        
+        for (const album of albums) {
+          await AlbumsOrm.findOneAndDelete({ _id: album._id });
+        }
+  }}
+});
+
 const ArtistsOrm = mongoose.model("Artists", ArtistsSchema);
 export default ArtistsOrm;

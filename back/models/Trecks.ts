@@ -41,13 +41,21 @@ const TrecksSchema = new mongoose.Schema({
   duration: {
     type: String,
     required: true,
-    unique: true,
   },
   isPublished: {
     type: Boolean,
     required: true,
     default: false,
   },
+});
+
+TrecksSchema.pre('findOneAndDelete', async function () {
+  const docToDelete = await this.model.findOne(this.getQuery());
+  if (docToDelete) {
+    await mongoose
+      .model("trecks_history")
+      .deleteMany({ treck_id: docToDelete._id });
+  }
 });
 
 const TrecksOrm = mongoose.model("Trecks", TrecksSchema);

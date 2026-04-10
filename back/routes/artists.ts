@@ -85,7 +85,7 @@ artistsRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, r
 artistsRouter.delete("/:id", auth, permit('admin'), async (req, res) => {
   const { id } = req.params;
   try {
-    const artist = await ArtistsOrm.findById(id);
+    const artist = await ArtistsOrm.findByIdAndDelete(id);
     if (artist) {
       await artist.deleteOne();
       return res.send({ success: "delete artist" });

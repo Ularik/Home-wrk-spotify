@@ -89,7 +89,7 @@ albumsRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, re
 albumsRouter.delete("/:id", auth, permit('admin'), async (req, res) => {
   const { id } = req.params;
   try {
-    const album = await AlbumsOrm.findById(id);
+    const album = await AlbumsOrm.findByIdAndDelete(id);
     if (!album) return res.status(400).send({error: 'album does not exists'});
     await album?.deleteOne();
     return res.send({success: 'delete'});

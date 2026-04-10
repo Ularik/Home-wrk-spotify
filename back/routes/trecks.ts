@@ -5,6 +5,7 @@ import auth from "../middlewares/auth";
 import { RequestWithUser } from "../middlewares/auth";
 import permit from "../middlewares/peermit";
 import { Error } from "mongoose";
+import TrecksHistoryOrm from "../models/TrecksHistory";
 
 const trecksRouter = express.Router();
 
@@ -63,10 +64,9 @@ trecksRouter.patch("/:id", auth, permit("admin"), async (req, res) => {
 trecksRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const treck = await TrecksOrm.findById(id);
+    const treck = await TrecksOrm.findByIdAndDelete(id);
     if (!treck) return res.status(400).send({ error: "Treck doesnt exist" });
     await treck?.deleteOne();
-
     return res.send({ success: "seccess delete" });
   } catch (err) {
     res.sendStatus(500);

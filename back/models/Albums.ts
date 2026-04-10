@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 import ArtistsOrm from "./Artists";
 import UsersOrm from "./Users";
 
+
 const AlbumsSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -43,6 +44,19 @@ const AlbumsSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+});
+
+AlbumsSchema.pre("findOneAndDelete", async function () {
+    const docToDelete = await this.model.findOne(this.getQuery());
+    if (docToDelete) {
+      if (docToDelete) {
+        const TrecksOrm = mongoose.model("Trecks");
+        const trecks = await TrecksOrm.find({ album: docToDelete._id });
+        
+        for (const treck of trecks) {
+          await TrecksOrm.findOneAndDelete({ _id: treck._id });
+        }
+  }}
 });
 
 const AlbumsOrm = mongoose.model("Albums", AlbumsSchema);

@@ -15,7 +15,7 @@ trecks_history_Router.get("/", auth, async (req, res) => {
 
   try {
     const trecks_history = await TrecksHistoryOrm.find({
-      user_id: new Types.ObjectId(user._id),
+      user_id: String(user._id),
     })
       .sort({ datetime: -1 })
       .populate("treck_id", "title duration album");
@@ -32,6 +32,7 @@ trecks_history_Router.get("/", auth, async (req, res) => {
 
     return res.send({trecks_history, albums});
   } catch(err) {
+    console.log(err);
     return res.status(400).send({error: err});
   }
 });

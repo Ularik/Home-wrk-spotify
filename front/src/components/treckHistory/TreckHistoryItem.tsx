@@ -52,7 +52,7 @@ const TreckHistoryItem: React.FC<Props> = ({ history }) => {
               variant="body2"
               sx={{ color: "text.primary", display: "inline" }}
             >
-              {current_album !== undefined ? current_album.artist.name : null}
+              {current_album !== undefined ? current_album.artist?.name : null}
             </Typography>
           }
         />

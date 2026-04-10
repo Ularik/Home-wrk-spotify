@@ -25,18 +25,11 @@ export const playTreck = createAsyncThunk<TreckHistory, any>(
 );
 
 
-export const fetchTrecksHistory = createAsyncThunk<TrecksHistoryResponse, string>(
+export const fetchTrecksHistory = createAsyncThunk<TrecksHistoryResponse>(
   "trecksHistory/fetchTrecksHistory",
-  async (userToken) => {
+  async () => {
     const res = await axiosApi.get<TrecksHistoryResponse>(
-      `/trecks_history/`,
-      {
-        headers: {
-          Authorization: userToken,
-          "Content-Type": "application/json",
-        },
-      },
-    );
+      `/trecks_history/`);
     return res.data;
   },
 );

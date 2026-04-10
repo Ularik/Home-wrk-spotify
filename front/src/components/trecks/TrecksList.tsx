@@ -12,6 +12,7 @@ import {
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { Alert } from "@mui/material";
 import { deleteTrecks, fetchTrecks, publicateTreck } from "./store/trecksThunks";
+import { fetchTrecksHistory } from "../treckHistory/store/historyThunks";
 import { useSearchParams } from "react-router";
 import Spinner from "../UI/Spinner";
 import { useEffect, useCallback } from "react";
@@ -37,6 +38,7 @@ const TrecksList = () => {
       try {
         await dispatch(deleteTrecks(id)).unwrap();
         if (albumId) dispatch(fetchTrecks(albumId));
+        dispatch(fetchTrecksHistory());
       } catch (err) {
         console.log(err);
       }
