@@ -14,10 +14,11 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectRegisterError } from "./store/usersSelectors";
-import { register } from "./store/usersThunks";
+import { register, googleLogin } from "./store/usersThunks";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import FileInput from "../UI/FileInput/FileInput";
+import { GoogleLogin } from "@react-oauth/google";
 
 
 const Register = () => {
@@ -65,8 +66,19 @@ const Register = () => {
       const response = await dispatch(register(state)).unwrap();
       navigate("/");
       toast.success(`${response.message}`);
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   };
+
+  const googleSubmit = async (credentials: string) => {
+    try {
+      await dispatch(googleLogin(credentials)).unwrap();
+      navigate("/");
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const theme = createTheme();
   return (
@@ -179,6 +191,18 @@ const Register = () => {
                   </Link>
                 </Grid>
               </Grid>
+              <Box sx={{ pt: 2 }}>
+                <GoogleLogin
+                  onSuccess={(credentialResponse) => {
+                    if (credentialResponse.credential) {
+                      googleSubmit(credentialResponse.credential);
+                    }
+                  }}
+                  onError={() => {
+                    console.log("Login Failed");
+                  }}
+                />
+              </Box>
             </Box>
           </Box>
         </Container>

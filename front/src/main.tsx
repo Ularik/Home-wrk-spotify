@@ -7,16 +7,19 @@ import { store, persistor } from "./app/store";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { PersistGate } from "redux-persist/integration/react";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GOOGLE_CLIENT_ID } from "./constants";
 
 createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <BrowserRouter>
-        <ToastContainer />
-        <CssBaseline />
-        <App />
-      </BrowserRouter>
-    </PersistGate>
-  </Provider>,
+  <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <BrowserRouter>
+          <ToastContainer />
+          <CssBaseline />
+          <App />
+        </BrowserRouter>
+      </PersistGate>
+    </Provider>
+  </GoogleOAuthProvider>,
 );

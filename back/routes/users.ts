@@ -4,6 +4,7 @@ import { Error } from "mongoose";
 import jwt from "jsonwebtoken";
 import config from "../config";
 import { imagesUpload } from "../middlewares/multer";
+import { OAuth2Client } from "google-auth-library";
 
 const usersRouter = express.Router();
 
@@ -55,6 +56,68 @@ usersRouter.post("/", imagesUpload.single('avatar'), async (req, res, next) => {
       return res.status(400).send(err);
     }
     return next(err);
+  }
+});
+
+// google register
+usersRouter.post("/google", async (req, res, next) => {
+  try {
+    if (!req.body.credential)
+      return res.status(400).send({ error: "Credential is required" });
+    const client = new OAuth2Client(config.clientID);
+
+    console.log(req.body.credential);
+    const ticket = await client.verifyIdToken({
+      idToken: req.body.credential,
+      audience: config.clientID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) return res.status(400).send({ error: "Google login error" });
+
+    const email = payload.email;
+    const id = payload.sub; // googleID
+    const displayName = payload.name;
+
+    if (!email)
+      return res
+        .status(400)
+        .send({ error: "Not enough information from Google" });
+
+    let user = await UsersOrm.findOne({ googleID: id });
+
+    if (!user) {
+      const generatePassword = crypto.randomUUID();
+      user = new UsersOrm({
+        username: email,
+        password: generatePassword,
+        confirmPassword: generatePassword,
+        googleID: id,
+        displayName,
+      });
+    }
+
+    user.generateToken();
+    const userSave = await user.save();
+
+    res.cookie("token", userSave.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+    });
+
+    res.cookie("accessToken", createAccessToken(userSave._id.toString()), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict", // Защита от CSRF (Cross site request forgery),
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+    });
+
+    res.send({ message: "Logged in with Google successfully", user });
+  } catch (e) {
+    next(e);
   }
 });
 
