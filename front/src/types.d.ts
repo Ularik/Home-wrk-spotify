@@ -5,7 +5,10 @@ export interface AuthResponse {
 
 export interface RegisterMutation {
   username: string;
+  displayName: string;
+  avatar: File | null;
   password: string;
+  confirmPassword: string;
 }
 
 export interface LoginMutation {
@@ -16,6 +19,8 @@ export interface LoginMutation {
 export interface User {
   _id: string;
   username: string;
+  displayName: string;
+  avatar: string | null;
   token: string;
   role: string
 }

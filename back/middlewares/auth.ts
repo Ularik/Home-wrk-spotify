@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response, RequestHandler } from "express";
 import { HydratedDocument } from "mongoose";
-import UsersOrm, { UsersFields } from "../models/Users";
-import jwt from "jsonwebtoken";
+import UsersOrm, { UserFields } from "../models/Users";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import config from "../config";
 
 export interface RequestWithUser extends Request {
-  user: HydratedDocument<UsersFields>;
+  user: HydratedDocument<UserFields>;
 }
 
 const auth: RequestHandler = async (
@@ -14,24 +14,32 @@ const auth: RequestHandler = async (
   next: NextFunction,
 ) => {
   const req = expressReq as RequestWithUser;
-  const token = req.get("Authorization")?.replace("Bearer ", "");
+  const jwtToken = req.cookies.accessToken;
 
-  if (!token) {
-    return res.status(401).send({ error: "No token present" });
+  if (!jwtToken) {
+      return res.status(401).send({error: 'No access token present'});
   }
   try {
-    const decoded = jwt.verify(token, config.jwtSecret) as { _id: string };
-    const user = await UsersOrm.findOne({ _id: decoded._id, token });
+    const decoded = jwt.verify(jwtToken, config.jwtSecret) as { _id: string };
+    const user = await UsersOrm.findOne({ _id: decoded._id });
 
     if (!user) {
-      return res.status(401).send({ error: "Invalid Token" });
+      return res
+        .status(401)
+        .send({ error: "Invalid or expired access token" });
     }
 
     req.user = user;
     next();
   } catch (e) {
-    console.log(e)
-    res.status(401).send({ error: "please authentificate" });
+    console.log(e);
+    if (e instanceof TokenExpiredError) {
+      return res.status(401).send({ error: "Your token expired" });
+    } else {
+      return res
+        .status(401)
+        .send({ error: "Please authenticate. Invalid access token" });
+    }
   }
 };
 

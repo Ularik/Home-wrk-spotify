@@ -17,11 +17,16 @@ import { selectRegisterError } from "./store/usersSelectors";
 import { register } from "./store/usersThunks";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import FileInput from "../UI/FileInput/FileInput";
+
 
 const Register = () => {
   const [state, setState] = useState<RegisterMutation>({
     username: "",
+    displayName: "",
+    avatar: null,
     password: "",
+    confirmPassword: ""
   });
 
   const dispatch = useAppDispatch();
@@ -33,6 +38,15 @@ const Register = () => {
       return error?.errors[fieldName].message;
     } catch {
       return undefined;
+    }
+  };
+
+  const fileInputChangeHandler = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { name, files } = e.target;
+    if (files) {
+      setState((prevState) => ({ ...prevState, [name]: files[0] }));
     }
   };
 
@@ -96,6 +110,20 @@ const Register = () => {
                 </Grid>
                 <Grid size={12}>
                   <TextField
+                    autoComplete="given-name"
+                    name="displayName"
+                    required
+                    fullWidth
+                    id="displayName"
+                    label="displayName"
+                    onChange={inputChangeHandler}
+                    autoFocus
+                    error={Boolean(getFieldError("displayName"))}
+                    helperText={getFieldError("displayName")}
+                  />
+                </Grid>
+                <Grid size={12}>
+                  <TextField
                     required
                     fullWidth
                     name="password"
@@ -103,9 +131,28 @@ const Register = () => {
                     label="Password"
                     type="password"
                     id="password"
-                    autoComplete="new-password"
                     error={Boolean(getFieldError("password"))}
                     helperText={getFieldError("password")}
+                  />
+                </Grid>
+                <Grid size={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    name="confirmPassword"
+                    onChange={inputChangeHandler}
+                    label="confirmPassword"
+                    type="confirmPassword"
+                    id="confirmPassword"
+                    error={Boolean(getFieldError("password"))}
+                    helperText={getFieldError("password")}
+                  />
+                </Grid>
+                <Grid size={12}>
+                  <FileInput
+                    name="avatar"
+                    label="avatar"
+                    onChange={fileInputChangeHandler}
                   />
                 </Grid>
                 <Grid size={12}>

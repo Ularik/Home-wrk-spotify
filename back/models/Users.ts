@@ -1,25 +1,40 @@
-import mongoose, { Model } from "mongoose";
+import mongoose, { Model, Document, HydratedDocument } from "mongoose";
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import config from "../config";
 
 
-export interface UsersFields {
-    id: string;
-    username: string;
-    password: string;
-    role: string;
-    token: string
+export interface UserFields {
+  id: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+  token: string;
+  role: string;
+  displayName: string;
+  googleID?: string;
+  avatar?: string;
+  __confirmPassword: string;
 }
+
 
 interface UsersMethods {
   checkPassword(password: string): Promise<boolean>;
   generateToken(): void;
 }
 
-type UsersModel = Model<UsersFields, {}, UsersMethods>
+interface UserVirtuals {
+    confirmPassword: string;
+}
 
-const UsersSchema = new mongoose.Schema<UsersFields, UsersModel, UsersMethods>({
+type UsersModel = Model<UserFields, {}, UsersMethods>
+
+const UsersSchema = new mongoose.Schema<
+ HydratedDocument<UserFields>,
+ UsersModel, 
+ UsersMethods, 
+ {}, 
+ UserVirtuals>({
   username: {
     type: String,
     required: true,
@@ -39,11 +54,28 @@ const UsersSchema = new mongoose.Schema<UsersFields, UsersModel, UsersMethods>({
     type: String,
     required: true,
   },
+
+  displayName: {
+    type: String,
+    required: true
+  },
+  googleID: String,
+  avatar: String,
+}, {
+    virtuals: {
+        confirmPassword: {
+            get() {
+                return this.__confirmPassword
+            },
+            set(confirmPassword: string) {
+                this.__confirmPassword = confirmPassword;
+            }
+        }
+    }
 });
 
 UsersSchema.path("username").validate({
-  validator: async function (this: any, value: string) {
-    // Если поле name не изменялось, пропускаем валидацию
+  validator: async function (this: Document, value: string) {
     if (!this.isModified("username")) return true;
     const user = await UsersOrm.findOne({ username: value });
     return !user;
@@ -51,6 +83,13 @@ UsersSchema.path("username").validate({
 
   message: "This user is already registered",
 });
+
+UsersSchema.path("password").validate(function (currentPassword: string) {
+  if (!this.isModified("password")) return;
+
+  // Если пароли НЕ совпадают, возвращаем false
+  return currentPassword === this.confirmPassword;
+}, "Passwords do not match");
 
 UsersSchema.pre("save", async function () {
     if (!this.isModified("password")) return; 
@@ -63,7 +102,7 @@ UsersSchema.pre("save", async function () {
 });
 
 UsersSchema.methods.generateToken = function () {
-  this.token = jwt.sign({ _id: this._id }, config.jwtSecret, {
+  this.token = jwt.sign({ _id: this._id }, config.refreshSecret, {
     expiresIn: "7d",
   });
 };
@@ -80,5 +119,5 @@ UsersSchema.methods.checkPassword = function (password) {
   return argon2.verify(this.password, password);
 };
 
-const UsersOrm = mongoose.model<UsersFields, UsersModel>("Users", UsersSchema);
+const UsersOrm = mongoose.model("Users", UsersSchema);
 export default UsersOrm;

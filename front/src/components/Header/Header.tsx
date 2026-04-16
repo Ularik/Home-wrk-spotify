@@ -33,7 +33,7 @@ const Header = () => {
               }}
             >
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/">CompStore</Link>
+                <Link to="/">Trecks</Link>
               </Typography>
 
               {user ? (

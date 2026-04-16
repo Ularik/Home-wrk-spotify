@@ -22,6 +22,9 @@ const run = async () => {
   const admin = await UsersOrm.create({
     username: 'admin',
     password: 'admin',
+    confirmPassword: "admin",
+    displayName: 'admins display name',
+    avatar: 'fixtures/admin.jpg',
     token: '321',
     role: 'admin'
   });
@@ -31,6 +34,9 @@ const run = async () => {
   const user = await UsersOrm.create({
     username: "user",
     password: "user",
+    confirmPassword: "user",
+    displayName: "users display name",
+    avatar: "fixtures/patrik.jpg",
     token: "123",
     role: "user",
   });

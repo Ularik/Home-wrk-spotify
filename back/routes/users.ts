@@ -1,26 +1,53 @@
 import express from "express";
 import UsersOrm from "../models/Users";
 import { Error } from "mongoose";
+import jwt from "jsonwebtoken";
+import config from "../config";
+import { imagesUpload } from "../middlewares/multer";
 
 const usersRouter = express.Router();
 
-usersRouter.post("/", async (req, res, next) => {
-  const username = req.body.username;
-  const password = req.body.password;
+const createAccessToken = (id: string) => {
+  return jwt.sign({ _id: id }, config.jwtSecret, {
+    expiresIn: "1h",
+  });
+}
 
-  if (username.trim() === "" || password.trim() === "") {
-    res.sendStatus(400).send({ error: "empty username or password" });
-    return;
-  }
+const createRefreshToken = (id: string) => {
+  return jwt.sign({ _id: id }, config.refreshSecret, {
+    expiresIn: "30h",
+  });
+};
+
+
+usersRouter.post("/", imagesUpload.single('avatar'), async (req, res, next) => {
   const data = {
-    username,
-    password,
+    username: req.body.username,
+    displayName: req.body.displayName,
+    avatar: req.file ? "images/" + req.file.filename : null,
+    password: req.body.password,
+    confirmPassword: req.body.confirmPassword,
   };
 
   try {
     const user = new UsersOrm(data);
     user.generateToken();
-    await user.save();
+    const saveUser = await user.save();
+
+    res.cookie("refreshToken", saveUser.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict", // Защита от CSRF (Cross site request forgery),
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+    });
+
+    res.cookie("accessToken", createAccessToken(saveUser._id.toString()), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict", // Защита от CSRF (Cross site request forgery),
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+    });
+
     return res.send({user, message: "Register new user"});
 
   } catch (err) {
@@ -36,11 +63,6 @@ usersRouter.post("/sessions", async (req, res, next) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  if (username.trim() === "" || password.trim() === "") {
-    res.status(400).send({ error: "empty username or password" });
-    return;
-  }
-
     try {
       const user = await UsersOrm.findOne({ username: username });
 
@@ -55,9 +77,24 @@ usersRouter.post("/sessions", async (req, res, next) => {
         return;
       }
       
-      await user.generateToken();
+      user.generateToken();
       await user.save();
-      res.send({ user, message: "Login user" });
+
+      res.cookie("refreshToken", user.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict", // Защита от CSRF (Cross site request forgery),
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+      });
+
+      res.cookie("accessToken", createAccessToken(user._id.toString()), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict", // Защита от CSRF (Cross site request forgery),
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+      });
+
+      return res.send({ user, message: "Login user" });
     } catch (err) {
       if (err instanceof Error.ValidationError) {
         return res.status(400).send(err);
@@ -67,21 +104,64 @@ usersRouter.post("/sessions", async (req, res, next) => {
 });
 
 
-usersRouter.delete("/sessions", async (req, res, next) => {
-  try {
-    const token = req.get("Authorization");
-    const success = { message: "Success" };
+// logout
+usersRouter.delete('/sessions', async (req, res, next) => {
+   try {
+       const refreshToken = req.cookies.refreshToken;
 
-    if (!token) return res.send(success);
+       if (refreshToken) {
+           const user = await UsersOrm.findOne({token: refreshToken});
 
-    const user = await UsersOrm.findOne({ token });
-    if (!user) return res.send(success);
-    user.generateToken()
-    user.save();
-    return res.send(success);
-  } catch (e) {
-    return next(e);
-  }
+           if (user) {
+               user.token = '';
+               await user.save();
+           }
+       }
+   } catch (e) {
+       next(e);
+   }
+
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        sameSite: 'strict',
+    });
+    res.clearCookie('refreshToken', {
+        httpOnly: true,
+        sameSite: 'strict',
+    });
+    res.send({message: 'Logged out successfully'});
+});
+
+// refresh token
+
+usersRouter.post('/token', async (req, res, next) => {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+
+        if (!refreshToken) {
+            return res.status(401).send({error: 'No refresh token present'});
+        }
+
+        const decoded = jwt.verify(refreshToken, config.refreshSecret) as {_id: string};
+
+        const user = await UsersOrm.findOne({_id: decoded._id, token: refreshToken});
+
+        if (!user) {
+            return res.status(401).send({error: 'Invalid refresh token'});
+        }
+
+        const accessToken = createAccessToken(user._id.toString());
+
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30 дней
+        });
+        res.send({message: 'Access token refreshed successfully'});
+    } catch (e) {
+        res.status(401).send({error: 'Invalid or expired refresh token'})
+    }
 });
 
 

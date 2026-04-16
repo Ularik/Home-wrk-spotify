@@ -4,6 +4,7 @@ import type { User } from "../../types";
 import { NavLink } from "react-router";
 import { logout } from "../users/store/usersThunks";
 import { useAppDispatch } from "../../app/hooks";
+import { apiURL } from "../../constants";
 
 
 interface Props {
@@ -43,7 +44,8 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         Add Treck
       </Button>
       <Button onClick={handleClick} color="inherit">
-        Hello, {user.username}
+        {user.avatar && <img style={{width: '50px', height: 'auto', borderRadius: '50%', display: 'block'}} src={`${apiURL + '/' + user.avatar}`} />}
+        Hello, {user.displayName}
       </Button>
 
       <Menu
@@ -57,7 +59,6 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             listening history
           </Button>
         </MenuItem>
-        <MenuItem>My account</MenuItem>
         <MenuItem onClick={logoutClick}>Logout</MenuItem>
       </Menu>
     </Box>

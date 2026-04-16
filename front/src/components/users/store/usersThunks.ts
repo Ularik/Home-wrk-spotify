@@ -18,11 +18,17 @@ export const register = createAsyncThunk<
   "users/register",
 
   async (registerMutation, { rejectWithValue }) => {
+    console.log(registerMutation)
+    const formData = new FormData();
+
+    const keys = Object.keys(registerMutation) as (keyof RegisterMutation)[];
+    keys.forEach(key => {
+      const value = registerMutation[key];
+      if (value !== null) formData.append(key, value)
+    })
+
     try {
-      const response = await axiosApi.post<AuthResponse>(
-        "/users",
-        registerMutation,
-      );
+      const response = await axiosApi.post<AuthResponse>("/users", formData);
       return response.data;
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 400) {
@@ -59,13 +65,10 @@ export const login = createAsyncThunk<
 );
 
 
-export const logout = createAsyncThunk<void, void, { state: RootState }>(
+export const logout = createAsyncThunk<void, void>(
   "users/logout",
-  async (_, { getState }) => {
-    const token = getState().users.user?.token;
+  async () => {
 
-    await axiosApi.delete("/users/sessions", {
-      headers: { Authorization: "Bearer " + token },
-    });
+    await axiosApi.delete("/users/sessions");
   },
 );
