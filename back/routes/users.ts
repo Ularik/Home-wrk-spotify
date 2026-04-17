@@ -168,31 +168,24 @@ usersRouter.post("/sessions", async (req, res, next) => {
 
 
 // logout
-usersRouter.delete('/sessions', async (req, res, next) => {
-   try {
-       const refreshToken = req.cookies.refreshToken;
+usersRouter.delete("/sessions", async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
 
-       if (refreshToken) {
-           const user = await UsersOrm.findOne({token: refreshToken});
+    if (refreshToken) {
+      const user = await UsersOrm.findOne({ token: refreshToken });
+      if (user) {
+        user.token = "";
+        await user.save();
+      }
+    }
 
-           if (user) {
-               user.token = '';
-               await user.save();
-           }
-       }
-   } catch (e) {
-       next(e);
-   }
-
-    res.clearCookie('accessToken', {
-        httpOnly: true,
-        sameSite: 'strict',
-    });
-    res.clearCookie('refreshToken', {
-        httpOnly: true,
-        sameSite: 'strict',
-    });
-    res.send({message: 'Logged out successfully'});
+    res.clearCookie("accessToken", { httpOnly: true, sameSite: "strict" });
+    res.clearCookie("refreshToken", { httpOnly: true, sameSite: "strict" });
+    return res.send({ message: "Logged out successfully" });
+  } catch (e) {
+    next(e);
+  }
 });
 
 // refresh token

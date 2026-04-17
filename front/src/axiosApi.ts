@@ -7,29 +7,29 @@ const axiosApi = axios.create({
 
 axiosApi.defaults.withCredentials = true;
 
-const logoutAndRedirect = async () => {
-  try {
-    await axios.delete(`${apiURL}/users/sessions`, {
-      withCredentials: true,
-      timeout: 2000,
-    });
-  } catch (e) {
-    console.log("Could not notify api about logout", e);
-  }
+// const logoutAndRedirect = async () => {
+//   try {
+//     await axios.delete(`${apiURL}/users/sessions`, {
+//       withCredentials: true,
+//       timeout: 2000,
+//     });
+//   } catch (e) {
+//     console.log("Could not notify api about logout", e);
+//   }
 
-  try {
-    const { store } = await import("./app/store.ts");
-    const { resetUser } = await import("./components/users/store/usersSlice.ts");
+//   try {
+//     const { store } = await import("./app/store.ts");
+//     const { resetUser } = await import("./components/users/store/usersSlice.ts");
 
-    store.dispatch(resetUser());
-  } catch (e) {
-    console.log("Redux store not found.", e);
-  }
+//     store.dispatch(resetUser());
+//   } catch (e) {
+//     console.log("Redux store not found.", e);
+//   }
 
-  if (window.location.pathname !== "/login") {
-    window.location.replace("/login");
-  }
-};
+//   if (window.location.pathname !== "/login") {
+//     window.location.replace("/login");
+//   }
+// };
 
 axiosApi.interceptors.response.use(
   (response) => response,

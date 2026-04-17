@@ -3,7 +3,7 @@ import { AlbumMutation, AlbumWithCountOfTrecks } from "../types";
 import { imagesUpload } from "../middlewares/multer";
 import AlbumsOrm from "../models/Albums";
 import TrecksOrm from "../models/Trecks";
-import auth, { RequestWithUser } from "../middlewares/auth";
+import auth, { authOrNot, RequestWithUser } from "../middlewares/auth";
 import permit from "../middlewares/peermit";
 import { Error } from "mongoose";
 
@@ -32,36 +32,42 @@ albumsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, next
   }
 });
 
-albumsRouter.get("/", async (req, res) => {
+albumsRouter.get("/", authOrNot, async (req, res) => {
+  const filters: { artist?: string, isPublished: boolean } = {isPublished: true};
   const { id } = req.query;
+  if (id) filters.artist = id as string;
+  const user = (req as RequestWithUser).user;
+  if (user && user.role === 'admin') filters.isPublished = false
+
   try {
-    if (id) {
-      const filteredAlbums = await AlbumsOrm.find({ artist: id }).sort({year_manufacture: -1});
-      const newAlbums: AlbumWithCountOfTrecks[] = [];
-      for (const album of filteredAlbums) {
-        const albumId = album._id;
-        const trecksCount = (await TrecksOrm.find({ album: albumId })).length;
-        newAlbums.push({
-          ...album.toObject(),
-          trecksCount: trecksCount,
-        } as AlbumWithCountOfTrecks);
-      }
-      return res.send(newAlbums);
+    const filteredAlbums = await AlbumsOrm.find(filters).sort({year_manufacture: -1});
+    const newAlbums: AlbumWithCountOfTrecks[] = [];
+    for (const album of filteredAlbums) {
+      const albumId = album._id;
+      const trecksCount = (await TrecksOrm.find({ album: albumId })).length;
+      newAlbums.push({
+        ...album.toObject(),
+        trecksCount: trecksCount,
+      } as AlbumWithCountOfTrecks);
     }
-    else {
-      const albums = await AlbumsOrm.find();
-      return res.send(albums);
-    }
+    return res.send(newAlbums);
+
   } catch (err) {
     return res.sendStatus(500);
   }
 });
 
 
-albumsRouter.get("/:id", async (req, res) => {
+albumsRouter.get("/:id", authOrNot, async (req, res) => {
   const { id } = req.params;
+  const user = (req as RequestWithUser).user;
   try {
-    const album = await AlbumsOrm.findById(id).populate("artist", "name");
+    let album = null;
+    if (user && user.role === 'admin') {
+      album = await AlbumsOrm.findById(id).populate("artist", "name");
+    } else {
+      album = await AlbumsOrm.findOne({_id: id, isPublished: true}).populate("artist", "name");
+    }
     if (album) return res.send(album);
     return res.send({});
   } catch (err) {
@@ -81,7 +87,7 @@ albumsRouter.patch("/:id/togglePublished", auth, permit('admin'), async (req, re
     }
     return res.send({error: 'album not exists'});
   } catch (err) {
-    return res.sendStatus(500);
+    return res.status(400).send({error: 'Server error'});
   }
 });
 

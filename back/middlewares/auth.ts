@@ -8,25 +8,25 @@ export interface RequestWithUser extends Request {
   user: HydratedDocument<UserFields>;
 }
 
-const auth: RequestHandler = async (
+
+export const authOrNot: RequestHandler = async (
   expressReq: Request,
   res: Response,
   next: NextFunction,
 ) => {
   const req = expressReq as RequestWithUser;
   const jwtToken = req.cookies.accessToken;
-
+  console.log(jwtToken)
   if (!jwtToken) {
-      return res.status(401).send({error: 'No access token present'});
+    return next();
   }
+
   try {
     const decoded = jwt.verify(jwtToken, config.jwtSecret) as { _id: string };
     const user = await UsersOrm.findOne({ _id: decoded._id });
 
     if (!user) {
-      return res
-        .status(401)
-        .send({ error: "Invalid or expired access token" });
+      return res.status(401).send({ error: "Invalid or expired access token" });
     }
 
     req.user = user;
@@ -41,6 +41,21 @@ const auth: RequestHandler = async (
         .send({ error: "Please authenticate. Invalid access token" });
     }
   }
+}
+
+
+const auth: RequestHandler = async (
+  expressReq: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  await authOrNot(expressReq, res, next);
+  const req = expressReq as RequestWithUser;
+
+  if (!req.user) {
+    return res.status(401).send({ error: "Token not sent" });
+  }
+  return next();
 };
 
 export default auth;

@@ -51,8 +51,7 @@ const UsersSchema = new mongoose.Schema<
     enum: ["user", "admin"],
   },
   token: {
-    type: String,
-    required: true,
+    type: String
   },
 
   displayName: {
@@ -110,7 +109,7 @@ UsersSchema.methods.generateToken = function () {
 
 UsersSchema.set("toJSON", {
   transform: (doc, ret, options) => {
-    const { password, ...rets } = ret;
+    const { password, token, ...rets } = ret;
     return rets;
   },
 });

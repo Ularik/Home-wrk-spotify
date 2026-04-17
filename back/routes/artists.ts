@@ -1,6 +1,6 @@
 import express from "express";
 import ArtistsOrm from "../models/Artists";
-import auth from "../middlewares/auth";
+import auth, { authOrNot } from "../middlewares/auth";
 import permit from "../middlewares/peermit";
 import { ArtistMutatiion } from "../types";
 import { imagesUpload } from "../middlewares/multer";
@@ -33,20 +33,20 @@ artistsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, nex
 });
 
 
-artistsRouter.get("/", auth, async (req, res) => {
+artistsRouter.get("/", authOrNot, async (req, res) => {
   const user = (req as RequestWithUser).user;
 
   try {
     let artists = [];
-    if (user.role === 'user') {
+    if (!user || user.role === "user") {
       artists = await ArtistsOrm.find({ isPublished: true });
     } else {
       artists = await ArtistsOrm.find();
     }
-    res.send(artists);
+    return res.send(artists);
   } catch (err) {
     console.log(err);
-    res.sendStatus(500);
+    return res.status(400).send({error: 'Server error'});
   }
 });
 

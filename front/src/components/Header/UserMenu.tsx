@@ -25,6 +25,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
 
   const logoutClick = async (e: React.MouseEvent) => {
     await dispatch(logout());
+    window.location.reload();
   }
 
   return (
