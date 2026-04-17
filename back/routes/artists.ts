@@ -50,17 +50,23 @@ artistsRouter.get("/", authOrNot, async (req, res) => {
   }
 });
 
-artistsRouter.get("/:id", async (req, res) => {
+artistsRouter.get("/:id", authOrNot, async (req, res) => {
   const { id } = req.params;
+
+  const filters: {_id: string, isPublished?: boolean} = {_id: id as string, isPublished: true};
+    const user = (req as RequestWithUser).user;
+  if (user && user.role === 'admin') delete filters.isPublished;
+
   try {
-    const artist = await ArtistsOrm.findById(id);
+    const artist = await ArtistsOrm.findOne(filters);
+
     if (artist) {
       return res.send(artist);
     }
-    return res.sendStatus(400).send({error: 'Artist not found'});
+    return res.status(400).send({error: 'Artist not found'});
   } catch (err) {
     console.log(err);
-    return res.sendStatus(500);
+    return res.status(400).send({error: 'server error'});
   }
 });
 

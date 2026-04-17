@@ -36,7 +36,7 @@ const run = async () => {
     password: "user",
     confirmPassword: "user",
     displayName: "users display name",
-    avatar: "fixtures/patrik.jpg",
+    avatar: "fixtures/patrik.webp",
     token: "123",
     role: "user",
   });

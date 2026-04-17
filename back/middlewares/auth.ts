@@ -16,7 +16,7 @@ export const authOrNot: RequestHandler = async (
 ) => {
   const req = expressReq as RequestWithUser;
   const jwtToken = req.cookies.accessToken;
-  console.log(jwtToken)
+
   if (!jwtToken) {
     return next();
   }
@@ -49,13 +49,13 @@ const auth: RequestHandler = async (
   res: Response,
   next: NextFunction,
 ) => {
-  await authOrNot(expressReq, res, next);
-  const req = expressReq as RequestWithUser;
-
-  if (!req.user) {
-    return res.status(401).send({ error: "Token not sent" });
-  }
-  return next();
+  await authOrNot(expressReq, res, () => {
+    const req = expressReq as RequestWithUser;
+    if (!req.user) {
+      return res.status(401).send({ error: "Token not sent" });
+    }
+    next();
+  });
 };
 
 export default auth;

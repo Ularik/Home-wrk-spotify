@@ -3,7 +3,7 @@ import Home from "./containers/Home";
 import Albums from "./containers/Albums";
 import Trecks from "./containers/Trecks";
 import Header from "./components/Header/Header";
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import Register from "./components/users/Register";
 import Login from "./components/users/Login";
 import TreckHistory from "./containers/TreckHistory";
@@ -28,6 +28,7 @@ const App = () => {
           <Route path="/add-treck" element={<TrecksForm />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Typography fontSize={40} textAlign={'center'}>Page Not Found</Typography>} />
         </Routes>
       </Container>
     </>

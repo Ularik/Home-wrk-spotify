@@ -33,11 +33,11 @@ albumsRouter.post("/", auth, imagesUpload.single("image"), async (req, res, next
 });
 
 albumsRouter.get("/", authOrNot, async (req, res) => {
-  const filters: { artist?: string, isPublished: boolean } = {isPublished: true};
+  const filters: { artist?: string, isPublished?: boolean } = {isPublished: true};
   const { id } = req.query;
   if (id) filters.artist = id as string;
   const user = (req as RequestWithUser).user;
-  if (user && user.role === 'admin') filters.isPublished = false
+  if (user && user.role === 'admin') delete filters.isPublished
 
   try {
     const filteredAlbums = await AlbumsOrm.find(filters).sort({year_manufacture: -1});
@@ -69,7 +69,7 @@ albumsRouter.get("/:id", authOrNot, async (req, res) => {
       album = await AlbumsOrm.findOne({_id: id, isPublished: true}).populate("artist", "name");
     }
     if (album) return res.send(album);
-    return res.send({});
+    return res.status(400).send({error: 'Album not found'});
   } catch (err) {
     return res.status(500).send({error: 'Server error'});
   }

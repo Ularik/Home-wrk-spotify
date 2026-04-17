@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link as RouterLink } from "react-router";
 import type { LoginMutation } from "../../types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { login } from "./store/usersThunks";
+import { googleLogin, login } from "./store/usersThunks";
 import { useNavigate } from "react-router";
 import { selectLoginError, selectLoginLoading } from "./store/usersSelectors";
 import Alert from "@mui/material/Alert";
@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { GoogleLogin } from "@react-oauth/google";
 
 
 const Login = () => {
@@ -39,6 +40,15 @@ const Login = () => {
     await dispatch(login(state)).unwrap();
     navigate("/");
   };
+
+  const googleSubmit = async (credentials: string) => {
+    try {
+      await dispatch(googleLogin(credentials)).unwrap();
+      navigate("/");
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -98,6 +108,19 @@ const Login = () => {
           >
             Sign In
           </Button>
+
+          <Box sx={{ pt: 2 }}>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                if (credentialResponse.credential) {
+                  googleSubmit(credentialResponse.credential);
+                }
+              }}
+              onError={() => {
+                console.log("Login Failed");
+              }}
+            />
+          </Box>
 
           <Grid container justifyContent="flex-end">
             <Grid>
